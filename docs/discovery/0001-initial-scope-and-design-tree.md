@@ -1,7 +1,7 @@
 # CinePilot Studio — 需求基线与架构讨论树（第 1 轮）
 
 > 日期：2026-10-30
-> 状态：需求基线 + 前五轮决定已确认；其余架构提案仍待讨论（**提案未等同于决策**）
+> 状态：需求基线 + 前六轮决定已确认；其余架构提案仍待讨论（**提案未等同于决策**）
 > 工作方式：遵循 [grill-with-docs](../process/grill-with-docs/SKILL.md)，逐个问题讨论、验证、定稿；术语经确认后更新 CONTEXT.md，只有真正满足条件的架构决策才建立 ADR。
 > 来源：用户本轮需求及此前关于独立短视频、创意编剧与影视制作流水线的讨论。
 
@@ -56,7 +56,9 @@ CinePilot Studio（单一产品）
 
 **第二轮补充确认**：`独立作品 Work = 分集 Episode`，每集对应一条独立完整短视频，参见 [ADR-0002](../adr/0002-episode-is-independent-work.md)。
 
-**第五轮已确认**：创意方向 Concept 是可独立保存、筛选、修改和留存的候选故事方案；用户选中方向并决定推进独立视频开发时才创建分集，未选方向保存在创意池。参见 [ADR-0005](../adr/0005-independent-concepts-before-episode.md)。**仍待讨论**：方向与分集的复用基数、点子/方向项目归属与跨项目复用、是否允许辅助参考多个点子，以及故事方案 Treatment 的身份与版本。
+**第五轮已确认**：创意方向 Concept 是可独立保存、筛选、修改和留存的候选故事方案；用户选中方向并决定推进独立视频开发时才创建分集，未选方向保存在创意池。参见 [ADR-0005](../adr/0005-independent-concepts-before-episode.md)。**仍待讨论**：方向与分集的复用基数、是否允许辅助参考多个点子，以及故事方案 Treatment 的身份与版本。
+
+**第六轮已确认**：创意点子、创意方向严格归属单个项目，复用只复制文本并给其他项目 Agent 作为新输入，不建立共享库或跨项目关联。参见 [ADR-0006](../adr/0006-project-local-idea-pools.md)。
 
 ### 3.3 阶段产物与依赖图（待定）
 
@@ -144,4 +146,4 @@ CinePilot Studio（单一产品）
 
 **已确认方案 A**：`项目 → 分集（独立作品）`，每集独立剧本，可选剧情连续性，不新增 `作品` 这一中间层级。正式领域词汇见 [CONTEXT.md](../../CONTEXT.md)，重要取舍见 [ADR-0002](../adr/0002-episode-is-independent-work.md)。
 
-**第三、四轮后续结论**：参见 [第三轮片段层级](./0002-episode-and-shot-hierarchy.md) 和 [第四轮剧本场次映射](./0003-screenplay-scene-to-segment-mapping.md)。[第五轮](./0004-idea-concept-episode-lifecycle.md) 已确认创意方向独立管理；当前 [第六轮](./0005-idea-concept-library-scope.md) 聚焦创意库的项目归属和共享。
+**第三、四轮后续结论**：参见 [第三轮片段层级](./0002-episode-and-shot-hierarchy.md) 和 [第四轮剧本场次映射](./0003-screenplay-scene-to-segment-mapping.md)。[第五轮](./0004-idea-concept-episode-lifecycle.md) 已确认创意方向独立管理；[第六轮](./0005-idea-concept-library-scope.md) 已确认项目独立创意池；当前 [第七轮](./0006-approved-artifact-revision-policy.md) 讨论已定稿产物的修订与版本回溯。
