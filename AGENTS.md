@@ -8,6 +8,9 @@
 4. `docs/process/grill-with-docs/ADR-FORMAT.md`
 5. `docs/discovery/` 中的最新讨论记录
 6. 若存在，`CONTEXT-MAP.md`、`CONTEXT.md`、`docs/adr/` 的现有内容
+7. 涉及 Agent/Model 时，阅读 `docs/spec/agent-integration-and-model-management.md`
+8. 涉及 Skill 时，阅读 `docs/spec/stage-skill-orchestration-and-registry.md`
+9. 开始开发前，阅读 `docs/spec/development-kickoff-and-implementation-roadmap.md`
 
 ## 强制工作方式
 
@@ -57,6 +60,16 @@
 
 **管理后台与 Agent 创作工作台必须明确区分**：管理后台负责项目、创意、分集、阶段进度、产物/版本/审批、资产/媒体、Agent Run、Skill 和系统设置；Agent 创作工作台负责对话创作、阶段产物实时查看/编辑、局部对象定点修改、Handoff 来源与阶段整体审查。两者共用同一数据和 Python 服务，不维护两份创作正文。完整页面职责与流程见 `docs/spec/product-information-architecture-and-page-functions.md`。
 
+**Agent / Model 配置与 Skill 配置必须分离**：Agent Runtime 决定执行器，Model 是该 Runtime 实际支持的模型，Skill 提供专业方法。模型列表和参数由 Agent Adapter 动态发现，不硬编码跨 Agent 统一模型清单。详细规则见 `docs/spec/agent-integration-and-model-management.md`。
+
+**每个 A1–B4 阶段必须有独立 Stage Skill Profile 配置能力**：允许主 Skill、辅助 Skill、条件/题材 Skill 和 Review Skill 组合；一个 Skill 可跨阶段复用。系统 Registry 登记不代表项目自动启用；外部 Skill 必须核验来源、Commit、License、NOTICE、安全和输出合同。详细规则与八个候选来源见 `docs/spec/stage-skill-orchestration-and-registry.md`。
+
+**外部 Skill 候选状态不得冒充已导入**：八个候选仅为第一批研究来源；A4 通用主 Screenwriter、B1/B2/B4 等缺失 Skill 由用户后续补充。未经许可/质量/兼容性评估，不复制或启用外部 Skill。
+
 **Python API / Agent 工作台设计草案**：见 `docs/spec/python-api-and-vue-electron-workbench.md`，保留后端模块、API 候选、任务事件和创作闭环；该文档不是完整后台页面清单。HTTP 路由、SSE/WebSocket、Vue UI 组件与 Electron 宿主仍为候选细节，勿误当成已批准的实现。
 
-**当前设计重点**：先由用户整体校准 `docs/spec/product-information-architecture-and-page-functions.md` 的后台/工作台页面清单与功能职责；页面功能确认后再做低保真线框和 UI/UX。视觉样式与组件库暂不讨论。之后进入 V1 技术架构/验收、Agent 沙箱和运行时测试。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同见 `docs/spec/stage-contracts-and-artifact-map.md`；资产模型草案见 `docs/spec/creative-asset-model-and-use.md`。**项目内多分集资产复用已确认**：项目基础资产可被同项目多集引用，分集显式选择自己的外观/服装/状态变体，不直接改动项目基础定义，见 `docs/adr/0015-project-assets-with-episode-variants.md`。媒体文件路径/名称不应作为业务关联主键，推荐通过资产/版本/变体/媒体 ID 解析（具体 Schema 未定稿）。Agent/Skill 的推荐路由、任务、查询及运行时适配设计在 `docs/spec/agent-skill-orchestration-and-runtime.md`；V1 **CLI 生态优先且可采用官方 Agent SDK 控制已经确认**，但首个 Codex/Claude 具体 Runtime 未确认。常规异常处理不单独 Grill。
+**当前状态：可以开始 V1 工程开发**。建议先执行 `docs/spec/development-kickoff-and-implementation-roadmap.md` 的 M0 工程骨架与技术 Spike，再按 M1–M9 里程碑逐步实现。不得等待所有 Skill 或所有页面完成后才开工；也不得绕过项目隔离、不可覆盖定稿和统一 ArtifactService 等基础约束。
+
+**实现前必须阅读**：`docs/spec/overall-product-workflow-and-system-map.md`、`docs/spec/product-information-architecture-and-page-functions.md`、`docs/spec/core-data-model-and-storage-contracts.md`、`docs/spec/stage-contracts-and-artifact-map.md`、`docs/spec/agent-integration-and-model-management.md`、`docs/spec/stage-skill-orchestration-and-registry.md`、`docs/spec/agent-skill-orchestration-and-runtime.md`、`docs/spec/project-isolated-agent-workspaces-and-skills.md` 与相关 ADR。
+
+**项目内多分集资产复用已确认**：项目基础资产可被同项目多集引用，分集显式选择自己的外观/服装/状态变体，不直接改动项目基础定义，见 `docs/adr/0015-project-assets-with-episode-variants.md`。媒体文件路径/名称不应作为业务关联主键，应通过资产/版本/变体/媒体 ID 解析。V1 **CLI 生态优先且可采用官方 Agent SDK 控制已经确认**，但首个 Runtime、模型发现能力和跨平台沙箱仍需通过 M0/M4 验证。常规异常处理不单独 Grill。
