@@ -1,7 +1,7 @@
 # CinePilot Studio — 需求基线与架构讨论树（第 1 轮）
 
 > 日期：2026-10-30
-> 状态：需求基线 + 前八轮决定已确认；其余架构提案仍待讨论（**提案未等同于决策**）
+> 状态：需求基线 + 前九轮决定已确认；其余架构提案仍待讨论（**提案未等同于决策**）
 > 工作方式：遵循 [grill-with-docs](../process/grill-with-docs/SKILL.md)，逐个问题讨论、验证、定稿；术语经确认后更新 CONTEXT.md，只有真正满足条件的架构决策才建立 ADR。
 > 来源：用户本轮需求及此前关于独立短视频、创意编剧与影视制作流水线的讨论。
 
@@ -65,6 +65,8 @@ CinePilot Studio（单一产品）
 **第七轮已确认**：每一阶段的已定稿产物不得被 UI 或 Agent 后续修改直接覆盖；修改产生新草稿，用户再次确认形成新的定稿，旧版本及其已有下游成果继续保留，见 [ADR-0007](../adr/0007-approved-artifact-revision-policy.md)。
 
 **第八轮已确认**：上游定稿更新后，系统依据明确的版本依赖标记相关下游为待复核，不自动重做；用户决定是否继续沿用或委托 Agent 修订，见 [ADR-0008](../adr/0008-review-dependent-artifacts-without-auto-regeneration.md)。
+
+**第九轮已确认**：同一分集的正式下游阶段必须等待上游所需产物定稿，且各分集可独立或批量推进；前置的点子/方向仍按分集创建前的创意流程管理。参见 [ADR-0009](../adr/0009-approved-upstream-stage-gates.md)。
 
 其他实现细节仍待决定。每一阶段产物有固定身份、具体版本、输入来源、上游版本引用、审查状态和下游影响范围。
 例如：剧本 v4 定稿 → 导演方案 v2 → 分镜 v3 → 提示词 v5。若剧本被修订为 v5，不立即删除下游；标出需评估/可能失效的下游版本。
@@ -150,4 +152,4 @@ CinePilot Studio（单一产品）
 
 **已确认方案 A**：`项目 → 分集（独立作品）`，每集独立剧本，可选剧情连续性，不新增 `作品` 这一中间层级。正式领域词汇见 [CONTEXT.md](../../CONTEXT.md)，重要取舍见 [ADR-0002](../adr/0002-episode-is-independent-work.md)。
 
-**第三、四轮后续结论**：参见 [第三轮片段层级](./0002-episode-and-shot-hierarchy.md) 和 [第四轮剧本场次映射](./0003-screenplay-scene-to-segment-mapping.md)。[第五轮](./0004-idea-concept-episode-lifecycle.md) 已确认创意方向独立管理；[第六轮](./0005-idea-concept-library-scope.md) 已确认项目独立创意池；[第七轮](./0006-approved-artifact-revision-policy.md) 已确认不可覆盖旧定稿；[第八轮](./0007-upstream-change-impact-policy.md) 已确认下游待复核策略；当前 [第九轮](./0008-stage-gate-and-handoff.md) 讨论阶段正式推进与 Handoff 准入条件。
+**第三、四轮后续结论**：参见 [第三轮片段层级](./0002-episode-and-shot-hierarchy.md) 和 [第四轮剧本场次映射](./0003-screenplay-scene-to-segment-mapping.md)。[第五轮](./0004-idea-concept-episode-lifecycle.md) 已确认创意方向独立管理；[第六轮](./0005-idea-concept-library-scope.md) 已确认项目独立创意池；[第七轮](./0006-approved-artifact-revision-policy.md) 已确认不可覆盖旧定稿；[第八轮](./0007-upstream-change-impact-policy.md) 已确认下游待复核策略；[第九轮](./0008-stage-gate-and-handoff.md) 已确认正式阶段准入；当前 [第十轮](./0009-agent-handoff-payload.md) 讨论 Agent 正式交接资料来源。
