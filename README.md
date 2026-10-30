@@ -13,6 +13,15 @@
 
 本期**不实现**视频生成；后续考虑 ComfyUI、RunningHub、即梦/Seedance 等适配。
 
+## 已确认技术栈
+
+- 前端：**Vue**（Web 管理后台与创作工作台）。
+- 后端：**Python**（业务服务、Agent/Skill 编排、版本与数据管理）。
+- 桌面端：**Electron**（复用 Vue 前端，提供桌面应用）。
+- 数据持久化：**Markdown + JSON + SQLite**（按字段唯一权威，统一服务读写）。
+
+Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行/打包方式尚未定稿，不得在未经确认时将推荐方案写成已批准选型。
+
 ## 设计讨论入口
 
 - [需求基线与架构讨论树（第一、二轮定稿）](docs/discovery/0001-initial-scope-and-design-tree.md)
@@ -27,7 +36,8 @@
 - [第十一轮定稿：系统预备必需事实、Agent 受控按需检索](docs/discovery/0010-controlled-on-demand-retrieval.md)
 - [第十二轮定稿：SQLite + Markdown/JSON 的权威分工](docs/discovery/0011-storage-authority-and-admin-ui.md)
 - [第十三轮定稿：文件先行、SQLite 发布版本引用](docs/discovery/0012-cross-store-publish-consistency.md)
-- [整体产品流程与系统设计总览（0.1 草案）](docs/spec/overall-product-workflow-and-system-map.md)
+- [整体产品流程与系统设计总览（0.2 草案，已纳入 Vue/Python/Electron）](docs/spec/overall-product-workflow-and-system-map.md)
+- [八阶段输入输出、产物及正式交接设计（草案）](docs/spec/stage-contracts-and-artifact-map.md)
 - [领域词汇表：CONTEXT.md](CONTEXT.md)
 - [ADR-0001：创意点子与分集派生关系](docs/adr/0001-idea-to-work-derivation.md)
 - [ADR-0002：独立作品与分集同一领域对象](docs/adr/0002-episode-is-independent-work.md)
