@@ -41,4 +41,6 @@
 
 **第十三轮已确认**：先准备并校验新的不可变 Markdown/JSON 版本文件，再由 SQLite 发布版本引用；不覆盖旧定稿。见 `docs/adr/0013-file-first-version-publication.md`。
 
-**当前设计重点**：先确定完整产品流程、阶段合同、核心产物、素材资产模型、Agent/Skill 协作、管理后台和 V1 范围。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`。常规异常处理不再单独 Grill。
+**已确认技术栈**：Web 前端 Vue，业务后端 Python，桌面端 Electron（复用 Vue 工作台）；持久化 Markdown + JSON + SQLite。具体 Vue 状态管理、Python HTTP 框架、Electron 与 Python 的启动/进程通信、桌面安装包形式均未定稿，不得擅自固定为特定实现。
+
+**当前设计重点**：先确定完整产品流程、阶段合同、核心产物、素材资产模型、Agent/Skill 协作、管理后台和 V1 范围。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同草案见 `docs/spec/stage-contracts-and-artifact-map.md`。常规异常处理不再单独 Grill。
