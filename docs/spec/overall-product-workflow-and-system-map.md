@@ -1,6 +1,6 @@
 # CinePilot Studio 整体产品流程与系统设计总览
 
-> 版本：0.5（增加 Agent/Skill 协作架构草案）
+> 版本：0.6（纳入 CLI 优先、SDK 控制和项目 Agent 工作区隔离）
 > 日期：2026-10-30
 > 状态：用于统一产品全貌与后续设计顺序；标注「已确认」的内容来自用户决策，其余为推荐草案，不自动视为定稿。
 > 依据：[需求基线](../discovery/0001-initial-scope-and-design-tree.md)、[领域词汇表](../../CONTEXT.md)、[ADR-0001 至 ADR-0013](../adr/)
@@ -190,7 +190,7 @@ EP-001
 
 ## 5. Agent、Skill 与系统编排
 
-**Agent/Skill 详细协作设计（推荐草案）：** [Agent / Skill 协作与运行架构](./agent-skill-orchestration-and-runtime.md)。涵盖 Router、专业 Skill、任务与会话、精简 Handoff、受控读取角色图片、Agent Runtime Adapter、草稿写回及 Vue/Electron 任务进度。具体 Agent 运行方式与能力桥接尚未定稿。
+**Agent/Skill 详细协作设计：** [Agent / Skill 协作与运行架构](./agent-skill-orchestration-and-runtime.md)。涵盖 Router、专业 Skill、任务与会话、精简 Handoff、受控读取角色图片、Agent Runtime Adapter、草稿写回及 Vue/Electron 任务进度。**已确认**：V1 CLI 生态优先、可通过官方 Agent SDK 控制；项目创建即建立独立 Agent 工作区，Skill 从集中目录按项目启用并只读投射，Agent 绝不可以访问其他项目。参见 [ADR-0016](../adr/0016-cli-first-with-official-agent-sdk.md)、[ADR-0017](../adr/0017-project-isolated-agent-workspaces-and-skill-projection.md) 与 [项目隔离工作区详细设计](./project-isolated-agent-workspaces-and-skills.md)。具体供应商、沙箱及 SDK/CLI 版本实现仍未定稿。
 
 ### 5.1 责任分工
 
