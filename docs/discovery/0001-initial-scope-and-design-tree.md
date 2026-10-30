@@ -26,7 +26,9 @@ CinePilot Studio 是一个将创意编剧与影视制作规划纳入同一项目
 - **阶段设计**：八阶段输入、输出、审查和交接的初版方案见 [阶段合同与产物映射](../spec/stage-contracts-and-artifact-map.md)；B2 独立、资产管理横向贯穿流程已确认。
 - **目录结构（已确认）**：新建项目即创建独立目录，项目级创意池、资产和媒体；分集下 A3–B4 阶段目录；阶段内独立产物草稿和不可覆盖定稿版本。见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)。
 - **SQLite 作用域（已确认）**：全系统共用一个系统级 SQLite，项目级 MD/JSON/媒体各自独立保存，见 [ADR-0019](../adr/0019-single-system-sqlite-with-project-content-files.md)。
-- **详细数据模型（推荐草案）**：SQLite 表组、项目与分集内容实体、阶段产物/版本、剧本场次与镜头结构、资产版本/分集变体及 AgentRun 查询映射，见 [核心数据模型与存储合同](../spec/core-data-model-and-storage-contracts.md)。
+- **核心数据模型关系（已确认基线，字段仍为草案）**：Project/Idea/Concept/Episode、Artifact/Revision/StageApproval、Scene/Segment/Shot、Asset/Variant/Media、AgentRun 等结构关系作为后续接口设计基线；具体 SQLite 表/SQL DDL/JSON Schema 尚未最终定稿，见 [数据模型](../spec/core-data-model-and-storage-contracts.md)。
+- **阶段整体定稿（已确认）**：单个 Scene/Segment/Shot 可以局部修改或 Agent 定点修改，但审批与正式交接针对阶段所采用的必要产物版本集合，不逐镜头单独审批。见 [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md)。
+- **管理后台与 Python 接口（设计草案）**：完整主流程和接口职责见 [Python 业务服务与 Vue/Electron 工作台](../spec/python-api-and-vue-electron-workbench.md)。
 
 ## 2. 待验证的整体形状（不是最终决定）
 
