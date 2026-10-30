@@ -469,7 +469,7 @@ workspace/
 1. 首个 Agent Runtime、官方 SDK/CLI 控制能力和本机隔离方案；凭据不能暴露给 Agent 子进程。
 2. Windows/macOS/Electron 下项目沙箱的真实文件系统隔离能力；cwd 不构成安全边界。
 3. Runtime 动态模型发现和参数选择能力；不支持时使用 Runtime 默认模型。
-4. 八个外部 Skill 的深度质量评测、License 范围审查和 CinePilot 输出适配；B1/B2/B4 Skill 来源由用户后续补充。
+4. 八个外部 Skill 的深度质量评测、License 范围审查和 CinePilot 输出适配；A4 通用 Screenwriter、B3 通用 Shot Designer 尚待补充/评估，B1/B2/B4 Skill 来源由用户后续补充。
 5. 分镜图片 V1 先支持用户上传/预览/引用；实际图像/视频生成 API 不在本期范围。
 
 这些是实现验证任务，不是继续拆成大量用户选择题的理由。涉及产品边界变化时再记录 Discovery/ADR。
