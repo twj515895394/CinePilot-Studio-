@@ -1,6 +1,6 @@
 # CinePilot Studio — 领域数据模型、SQLite 索引与 Markdown/JSON 映射
 
-> 版本：0.2（核心领域关系与阶段审批粒度获确认，字段示例仍为草案）
+> 版本：0.3（补充 Agent/Model Profile、Skill Source/Version、阶段 Skill Profile 与 Run 快照逻辑实体）
 > 日期：2026-10-30
 > 状态：**用户已确认核心实体/关系映射作为后续设计基线，并确认阶段整体定稿、局部场次/片段/镜头可编辑**；本文件的表名、SQL 字段和 JSON Schema 示例仍是推荐设计，尚非最终迁移脚本。见 [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md) 与 [确认记录](../discovery/0017-core-data-approval-and-ui-api-main-flow.md)。
 > 依赖：[项目目录规范](./project-workspace-directory-layout.md)、[八阶段合同](./stage-contracts-and-artifact-map.md)、[资产模型](./creative-asset-model-and-use.md)、[Agent/Skill 架构](./agent-skill-orchestration-and-runtime.md)、[ADR-0001~0019](../adr/)
@@ -145,6 +145,50 @@ A1/A2 不创建 Episode 或 StageInstance 的空记录。创意池保存与多�
 | \`messages\` | id, conversation_id, role, body_ref?, created_at | 聊天记录可独立存储；不默认全量喂模型 |
 
 建议 V1 可以先只实现必要字段，进度事件可由 \`agent_run_events\` 或运行时事件流承载；**不要求为每个大模型供应商建一组独立业务表**。
+
+---
+
+### 3.5 Agent Runtime、Model Profile 与 Skill Profile（逻辑实体建议）
+
+此前 3.4 的 Agent/Skill/会话表是初步集合。为支持用户已确认的 Agent 接入、模型选择和每阶段 Skill 配置，建议在同一个系统级 SQLite 中增加以下逻辑实体。以下仍是领域实体候选，不是最终 DDL。
+
+| 建议表/实体 | 核心字段（示意） | 说明 |
+|---|---|---|
+| agent_runtime_registry | runtime_id, adapter_key, integration_type, enabled | 系统支持的 Agent Runtime 与 Adapter 注册 |
+| agent_connection_profiles | id, runtime_id, host_type, executable_ref, auth_ref, detected_version, status | 本机 CLI/SDK 或受控 Agent Host 连接配置；不存明文密钥 |
+| agent_runtime_capabilities | connection_profile_id, capabilities_json, detected_at, adapter_version | Adapter 实际检测到的能力，unknown 不当作 supported |
+| agent_model_catalog | connection_profile_id, model_id, display_name, discovery_source, capabilities_json, availability, discovered_at | Runtime 动态发现的模型缓存；来源数据，不作为手工伪造的全局目录 |
+| agent_model_profiles | id, connection_profile_id, model_selection_json, parameters_json, profile_version | Agent + Model + Adapter 支持参数的可复用组合 |
+| system_execution_defaults | default_agent_model_profile_id | 系统默认执行配置 |
+| project_agent_policies | project_id, default_agent_model_profile_id, policy_json | 项目默认 Agent/Model 策略 |
+| project_stage_agent_routes | project_id, stage_code, agent_model_profile_id, route_version | 项目 A1–B4 阶段级 Agent/Model 配置 |
+| episode_stage_agent_overrides | episode_id, stage_code, agent_model_profile_id, override_json | 分集阶段覆盖 |
+| skill_sources | source_id, repository_url, skill_path, upstream_commit, file_sha, license_status, notice_ref | 外部来源、固定 Commit、入口文件摘要和许可状态 |
+| skill_versions | skill_version_id, skill_id, cinepilot_version, source_id, package_digest, lifecycle_status | 系统 Skill Registry 的不可变版本 |
+| stage_skill_templates | stage_code, template_version, profile_json | 系统推荐的 A1–B4 阶段模板 |
+| project_stage_skill_profiles | project_id, stage_code, profile_version, profile_json | 项目每个阶段的主/辅/条件/审查 Skill 配置 |
+| episode_stage_skill_overrides | episode_id, stage_code, override_version, profile_json | 分集阶段 Skill 覆盖 |
+| agent_run_execution_snapshots | run_id, runtime_snapshot_json, model_snapshot_json, config_resolution_json, sandbox_policy_version | 某次 Run 实际使用的 Agent/Model 和配置来源快照 |
+| agent_run_skill_items | run_id, skill_version_id, role, invocation_reason, load_manifest_ref | 本次 Run 实际采用的 Skill 版本和角色 |
+| agent_run_skill_files | run_id, skill_version_id, relative_path, file_sha, loaded_at | 本次任务实际加载的 Skill/reference 文件清单 |
+| agent_run_events | run_id, sequence, event_type, payload_ref, created_at | 任务状态、Skill Plan、草稿提交等事件 |
+
+#### 配置解析与快照规则
+
+- Agent/Model 配置优先级：Task Override → Episode Stage Override → Project Stage Route → Project Default → System Default。
+- Skill 配置优先级：Task Skill Override → Episode Stage Skill Override → Project Stage Skill Profile → System Stage Template。
+- 两条配置链独立解析，Run 创建时合并成一个 Run Plan；不得把 Skill 配置和模型参数存成同一套字段。
+- Agent Run 启动前必须保存不可变执行快照；后续修改项目默认 Profile 不改变历史 Run。
+- agent_model_catalog 是 Adapter 发现结果缓存；不支持模型发现的 Runtime 只保存 runtime_default，不猜测模型。
+- 项目 Skill Profile 只引用系统 Skill Version；项目启用不复制全局 Registry 的全部源文件。
+- 认证材料保存在宿主安全凭据设施；SQLite 只保存 auth_ref/状态，不存明文 Token、Cookie 或私钥。
+- Agent 子进程不直接访问 SQLite；Run 的工具调用通过后端绑定 project_id 并校验对象归属。
+
+#### 旧 project_skill_bindings 的定位
+
+原有 project_skill_bindings 可以保留为“项目允许使用/启用哪些 Skill Version”的白名单；具体哪个阶段调用什么角色的 Skill，由 project_stage_skill_profiles 表达。不要再把一个简单的 project_skill_bindings 列表当作完整阶段路由配置。
+
+详细业务规则见 [Agent 接入与模型管理](./agent-integration-and-model-management.md) 与 [Skill Registry 与阶段编排](./stage-skill-orchestration-and-registry.md)。
 
 ---
 
