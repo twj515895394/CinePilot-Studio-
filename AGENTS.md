@@ -55,6 +55,8 @@
 
 **已确认的正式审查粒度**：按分集的阶段整体定稿，以本阶段必要产物的指定版本集合交接；场次、片段及镜头可以局部编辑或指定 Agent 修改，但不设逐镜头独立审批，局部修改进入该阶段草稿。见 `docs/adr/0020-stage-level-approval-with-localized-editing.md`。
 
-**Python API / Vue-Electron 工作台设计草案**：见 `docs/spec/python-api-and-vue-electron-workbench.md`，包括项目创建、创意池、分集 A3–B4、Agent 任务与流式事件、草稿保存、局部编辑、审批和资产引用。HTTP 路由、SSE/WebSocket、Vue UI 组件与 Electron 宿主仍为候选细节，勿误当成已批准的实现。
+**管理后台与 Agent 创作工作台必须明确区分**：管理后台负责项目、创意、分集、阶段进度、产物/版本/审批、资产/媒体、Agent Run、Skill 和系统设置；Agent 创作工作台负责对话创作、阶段产物实时查看/编辑、局部对象定点修改、Handoff 来源与阶段整体审查。两者共用同一数据和 Python 服务，不维护两份创作正文。完整页面职责与流程见 `docs/spec/product-information-architecture-and-page-functions.md`。
 
-**当前设计重点**：完成完整工作台主路径与 V1 技术架构/验收、Agent 沙箱和运行时测试。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同见 `docs/spec/stage-contracts-and-artifact-map.md`；资产模型草案见 `docs/spec/creative-asset-model-and-use.md`。**项目内多分集资产复用已确认**：项目基础资产可被同项目多集引用，分集显式选择自己的外观/服装/状态变体，不直接改动项目基础定义，见 `docs/adr/0015-project-assets-with-episode-variants.md`。媒体文件路径/名称不应作为业务关联主键，推荐通过资产/版本/变体/媒体 ID 解析（具体 Schema 未定稿）。Agent/Skill 的推荐路由、任务、查询及运行时适配设计在 `docs/spec/agent-skill-orchestration-and-runtime.md`；V1 **CLI 生态优先且可采用官方 Agent SDK 控制已经确认**，但首个 Codex/Claude 具体 Runtime 未确认。常规异常处理不单独 Grill。
+**Python API / Agent 工作台设计草案**：见 `docs/spec/python-api-and-vue-electron-workbench.md`，保留后端模块、API 候选、任务事件和创作闭环；该文档不是完整后台页面清单。HTTP 路由、SSE/WebSocket、Vue UI 组件与 Electron 宿主仍为候选细节，勿误当成已批准的实现。
+
+**当前设计重点**：先由用户整体校准 `docs/spec/product-information-architecture-and-page-functions.md` 的后台/工作台页面清单与功能职责；页面功能确认后再做低保真线框和 UI/UX。视觉样式与组件库暂不讨论。之后进入 V1 技术架构/验收、Agent 沙箱和运行时测试。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同见 `docs/spec/stage-contracts-and-artifact-map.md`；资产模型草案见 `docs/spec/creative-asset-model-and-use.md`。**项目内多分集资产复用已确认**：项目基础资产可被同项目多集引用，分集显式选择自己的外观/服装/状态变体，不直接改动项目基础定义，见 `docs/adr/0015-project-assets-with-episode-variants.md`。媒体文件路径/名称不应作为业务关联主键，推荐通过资产/版本/变体/媒体 ID 解析（具体 Schema 未定稿）。Agent/Skill 的推荐路由、任务、查询及运行时适配设计在 `docs/spec/agent-skill-orchestration-and-runtime.md`；V1 **CLI 生态优先且可采用官方 Agent SDK 控制已经确认**，但首个 Codex/Claude 具体 Runtime 未确认。常规异常处理不单独 Grill。
