@@ -20,4 +20,6 @@
 - 涉及创意编剧、影视制作的产物、数据关系、状态和实现时，明确上下游依赖，避免凭漫长聊天记录隐式传递。
 - 未经用户要求或定稿，不要把架构草案直接落成大量实现代码。
 
-当前最先讨论：创意点子、候选方向、单条独立视频/分集的派生关系。详见 `docs/discovery/0001-initial-scope-and-design-tree.md`。
+当前已确认：创意点子 1:N 派生分集（每集唯一主创意来源），且「独立作品 = 分集」，不再独立建立作品层级。见 `CONTEXT.md`、`docs/adr/0001-idea-to-work-derivation.md`、`docs/adr/0002-episode-is-independent-work.md`。
+
+**当前单个待讨论问题**：分集内片段、子片段与镜头采用哪种层级组织，见 `docs/discovery/0002-episode-and-shot-hierarchy.md`。
