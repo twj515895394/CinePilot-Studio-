@@ -49,11 +49,10 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [Agent V1 运行路线：CLI 生态优先、官方 Agent SDK 可用时优先评估（已确认）](docs/discovery/0015-agent-runtime-priority.md)
 - [项目隔离 Agent 工作区与 Skill 只读投射（设计草案）](docs/spec/project-isolated-agent-workspaces-and-skills.md)
 - [项目工作区目录规范 v0.3（阶段目录 + 系统单 SQLite 均已确认）](docs/spec/project-workspace-directory-layout.md)
-- [核心数据模型与存储映射 v0.2（核心关系已确认，DDL/Schema 仍为草案）](docs/spec/core-data-model-and-storage-contracts.md)
-- [Python 业务接口与 Vue/Electron 创作工作台设计 v0.2](docs/spec/python-api-and-vue-electron-workbench.md)
-- [产品信息架构与页面功能规格 v0.1：项目管理后台 + Agent 创作工作台](docs/spec/product-information-architecture-and-page-functions.md)
+- [核心数据模型与存储映射 v0.3（含 Agent/Model/Skill Profile 逻辑实体）](docs/spec/core-data-model-and-storage-contracts.md)
+- [Python 业务接口与 Vue/Electron 创作工作台设计 v0.3](docs/spec/python-api-and-vue-electron-workbench.md)
+- [产品信息架构与页面功能规格 v0.2：项目管理后台 + Agent 创作工作台 + Agent/Model/Skill 管理](docs/spec/product-information-architecture-and-page-functions.md)
 - [项目管理后台与 Agent 创作工作台页面设计记录](docs/discovery/0018-management-backend-and-agent-workbench-page-architecture.md)
-- [Agent/Model 与阶段 Skill 编排确认记录](docs/discovery/0019-agent-model-and-stage-skill-orchestration.md)
 - [核心模型与工作台主流程衔接确认记录](docs/discovery/0017-core-data-approval-and-ui-api-main-flow.md)
 - [SQLite 作用域：全系统共用一个数据库（已确认）](docs/discovery/0016-sqlite-scope-and-project-portability.md)
 - [项目基础资产与分集变体确认记录](docs/discovery/0014-project-asset-episode-variants.md)
@@ -90,4 +89,4 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - `docs/adr/`：只在实际权衡后的重大、难逆转架构决策确定时创建。
 - `docs/spec/`（按需）：领域、数据、接口、交互和阶段产物的详细设计规格；在决策逐步清晰后扩展。
 
-目前仓库以设计讨论为主。不要把讨论草案误读为已经批准的开发规范。
+**当前状态**：V1 产品与架构设计基线已建立，可以按 [Codex 开发启动与实施路线图](docs/spec/development-kickoff-and-implementation-roadmap.md) 开始 M0 工程骨架与技术 Spike。各专项规格中明确标注的候选 Skill、技术选型和待验证事项仍不得误读为已批准或已实现。
