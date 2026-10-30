@@ -21,6 +21,8 @@ CinePilot Studio 是一个将创意编剧与影视制作规划纳入同一项目
 - **跨阶段交接**：长链路 Agent 创作必须保证每阶段读到**被批准且准确**的上游状态及版本，不能靠无限聊天上下文记忆。
 - **界面可操作**：所有阶段产物在 UI 中可浏览、审阅、编辑、反馈给 Agent 继续优化，并能追溯定稿前后的历史。
 - **技术栈（已确认）**：Vue 前端 + Python 后端，且必须支持 Electron 桌面端；Web 与 Electron 尽可能复用前端工作台，通过统一业务服务连接存储和 Agent。
+- **Agent 运行路线（已确认）**：V1 优先 CLI 运行时生态，官方 Agent SDK 可用时优先用于 Python 控制，直接模型 API 后续扩展；参见 [ADR-0016](../adr/0016-cli-first-with-official-agent-sdk.md)。
+- **Agent 项目隔离（已确认）**：创建项目时建立独立 Agent 工作区、任务以该目录为 cwd，Skill 从系统目录按项目启用并只读链接/投射；必须从执行环境与受控查询层禁止访问其他项目目录和数据，不能仅依赖 cwd 或 Prompt；参见 [ADR-0017](../adr/0017-project-isolated-agent-workspaces-and-skill-projection.md)。
 - **阶段设计**：完整八阶段输入、输出、审查和交接的首版方案已整理在 [阶段合同与产物映射](../spec/stage-contracts-and-artifact-map.md)，其中 B2 制作拆解与资产管理的正式关系仍为候选方案。
 
 ## 2. 待验证的整体形状（不是最终决定）
@@ -111,7 +113,7 @@ CinePilot Studio（单一产品）
 - **反馈闭环**：Agent 草稿 → 系统校验与预览 → 人工批注/编辑 → Agent 定点改稿 → 用户定稿 → 固化版本与下游交接。
 - **记忆分层**：长期项目世界观/约束、单作品阶段事实、当前任务精简上下文、完整可追溯聊天记录。handoff 不应依赖聊天窗口无限延长。
 - **已确认技术栈**：Vue + Python + Electron；此选择不自动确定 Python Web 框架、Electron 与 Python 进程绑定方式或部署形态。
-- **Agent/Skill 完整方案（待确认实现细节）**：[Agent/Skill 协作与运行架构草案](../spec/agent-skill-orchestration-and-runtime.md) 已提出代码阶段编排、Skill 路由、受控资料与图片读取、草稿提交/实时 UI 和可替换运行时适配层。
+- **Agent/Skill 完整方案（待确认实现细节）**：[Agent/Skill 协作与运行架构草案](../spec/agent-skill-orchestration-and-runtime.md) 已提出代码阶段编排、Skill 路由、受控资料与图片读取、草稿提交/实时 UI 和可替换运行时适配层。项目工作区和 Skill 受限投射的详细实现草案见 [Agent Workspace 与 Skill Projection](../spec/project-isolated-agent-workspaces-and-skills.md)。
 - **待验证**：首期 Agent 执行方式（Codex CLI / Claude CLI / SDK / API）、Skill 装载/隔离、权限与文件访问边界。
 
 ## 6. 前端建议的核心工作台（待决）
