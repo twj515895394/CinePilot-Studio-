@@ -45,4 +45,6 @@
 
 **已确认的 B2 与资产管理边界**：B2 是正式且独立的「制作拆解」阶段，负责剧本场次→导演片段/可选子片段规划及本集资产需求核对；角色、场景、服装、道具等资产贯穿 A3–B4 管理，不能限定到 B2 才能创建。见 `docs/adr/0014-production-breakdown-with-cross-stage-assets.md`。
 
+**已确认 V1 Agent 运行路线与项目隔离**：优先 CLI 生态，官方 Agent SDK 可优先作为 Python 控制接口（并非直接模型 API）；每个项目创建独立 Agent 工作区，任务 cwd 指向该项目，项目已启用 Skill 从系统 Skill Registry 只读链接/投射。Agent 进程、子进程与所有数据查询工具**绝不可访问其他项目目录或数据**；仅设置 cwd/Prompt/普通 symlink 不够，必须满足 OS/执行环境隔离，已定稿内容不可被 Agent 任意改写。见 `docs/adr/0016-cli-first-with-official-agent-sdk.md`、`docs/adr/0017-project-isolated-agent-workspaces-and-skill-projection.md` 与 `docs/spec/project-isolated-agent-workspaces-and-skills.md`。
+
 **当前设计重点**：继续完成整体产品流程、阶段合同与核心产物、素材资产使用关系、Agent/Skill 协作、后台和 V1 范围。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同见 `docs/spec/stage-contracts-and-artifact-map.md`；资产模型草案见 `docs/spec/creative-asset-model-and-use.md`。**项目内多分集资产复用已确认**：项目基础资产可被同项目多集引用，分集显式选择自己的外观/服装/状态变体，不直接改动项目基础定义，见 `docs/adr/0015-project-assets-with-episode-variants.md`。媒体文件路径/名称不应作为业务关联主键，推荐通过资产/版本/变体/媒体 ID 解析（具体 Schema 未定稿）。Agent/Skill 的推荐路由、任务、查询及运行时适配设计在 `docs/spec/agent-skill-orchestration-and-runtime.md`；CLI/SDK/API 首要运行源尚未确认。常规异常处理不单独 Grill。
