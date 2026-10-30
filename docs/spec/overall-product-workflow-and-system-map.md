@@ -419,7 +419,9 @@ workspace/
 
 - 项目、创意点子、创意方向和分集管理。
 - A1–A4 与 B1–B4 的完整创作流程（阶段合同细节后续确定）。
-- Agent 对话入口、Router/专业 Skill 调用、受控读写工具。
+- Agent 对话入口、Agent Registry/Adapter、Connection Profile、动态模型/参数发现、Agent Model Profile 与 Run 配置快照。
+- A1–B4 八个阶段的 Stage Skill Profile、系统 Skill Registry、Skill Router/Skill Plan、项目启用与版本固定；缺失阶段 Skill 可暂为空，用户后续补充。
+- Agent 对话入口、专业 Skill 调用、受控读写工具。
 - 精简 Handoff、准确版本引用和按需读取。
 - Markdown/JSON/SQLite 的权威分工与统一业务服务。
 - 草稿、定稿、历史版本、上游依赖和待复核标记。
