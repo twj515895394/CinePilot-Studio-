@@ -45,6 +45,7 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [Agent V1 运行路线：CLI 生态优先、官方 Agent SDK 可用时优先评估（已确认）](docs/discovery/0015-agent-runtime-priority.md)
 - [项目隔离 Agent 工作区与 Skill 只读投射（设计草案）](docs/spec/project-isolated-agent-workspaces-and-skills.md)
 - [项目工作区目录规范 v0.3（阶段目录 + 系统单 SQLite 均已确认）](docs/spec/project-workspace-directory-layout.md)
+- [核心数据模型与存储映射 v0.1（SQLite 表、JSON/Markdown、阶段版本关系草案）](docs/spec/core-data-model-and-storage-contracts.md)
 - [SQLite 作用域：全系统共用一个数据库（已确认）](docs/discovery/0016-sqlite-scope-and-project-portability.md)
 - [项目基础资产与分集变体确认记录](docs/discovery/0014-project-asset-episode-variants.md)
 - [B2 与横向资产管理的确认记录](docs/discovery/0013-production-breakdown-and-asset-lifecycle.md)
