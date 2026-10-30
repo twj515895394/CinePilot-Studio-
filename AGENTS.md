@@ -49,6 +49,8 @@
 
 **已确认目录分层**：Vue/Electron 新建项目立即创建独立项目工作区；项目 `creative-pool/`、`assets/`、`media/`；分集 `episodes/{episode_id}/stages/` 分别存 A3–B4 六个正式阶段；阶段内产物区分草稿与不可覆盖定稿版本。参见 `docs/adr/0018-project-stage-artifacts-and-revisions-layout.md` 与 `docs/spec/project-workspace-directory-layout.md`。具体文件名和 Schema 尚未定稿。Agent 仅写任务草稿，通过业务服务保存正式产物。
 
+**数据模型详细设计草案**：请先阅读 `docs/spec/core-data-model-and-storage-contracts.md`，了解 Project/Idea/Concept/Episode、Artifact/Revision/StageApproval、Scene/Segment/Shot、Asset/Variant/Media、AgentRun/SkillBinding 等的推荐数据合同。**此设计尚未用户批准为最终 DDL/JSON Schema**；落实时遵守字段唯一权威（SQLite 跨对象关系/版本审批，Markdown 正文，JSON 创作结构），SQLite 的结构索引只是可重建只读投影，不允许与 JSON 同时独立编辑相同内容。
+
 **已确认 SQLite 作用域**：所有项目共用系统级 SQLite，推荐逻辑位置 `app/cinepilot.sqlite`，由 Python 业务服务集中管理项目、分集、状态、审批及产物版本；项目 Markdown/JSON/媒体分别保留在独立项目目录。Agent 不得直接访问 SQLite 或其他项目资料。见 `docs/adr/0019-single-system-sqlite-with-project-content-files.md`。文档读取方式：数据库定位权限、对象与版本，按需读取文件正文，不重复维护可编辑全文。
 
 **当前设计重点**：继续完成整体产品流程、阶段合同与核心产物、素材资产使用关系、Agent/Skill 协作、后台和 V1 范围。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同见 `docs/spec/stage-contracts-and-artifact-map.md`；资产模型草案见 `docs/spec/creative-asset-model-and-use.md`。**项目内多分集资产复用已确认**：项目基础资产可被同项目多集引用，分集显式选择自己的外观/服装/状态变体，不直接改动项目基础定义，见 `docs/adr/0015-project-assets-with-episode-variants.md`。媒体文件路径/名称不应作为业务关联主键，推荐通过资产/版本/变体/媒体 ID 解析（具体 Schema 未定稿）。Agent/Skill 的推荐路由、任务、查询及运行时适配设计在 `docs/spec/agent-skill-orchestration-and-runtime.md`；CLI/SDK/API 首要运行源尚未确认。常规异常处理不单独 Grill。
