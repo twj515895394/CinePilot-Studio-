@@ -24,4 +24,6 @@
 
 **第六轮已确认**：创意点子、创意方向完全归属各自项目；跨项目使用只允许 UI 复制文本、粘贴给另一项目 Agent 重新发散，**不设计全局创意库、跨项目共享/导入、同步、来源引用机制**。见 `docs/adr/0006-project-local-idea-pools.md`。
 
-**当前单个待讨论问题**：已定稿阶段产物通过 UI/Agent 修改时如何保持历史版本与二次定稿，见 `docs/discovery/0006-approved-artifact-revision-policy.md`。
+**第七轮已确认**：UI 与 Agent 均不得覆盖已定稿产物；修改先产生新草稿，用户确认后才形成新的定稿，旧版本和已存在的下游产物都保留。见 `docs/adr/0007-approved-artifact-revision-policy.md`。
+
+**当前单个待讨论问题**：上游新定稿出现后，下游如何依据引用关系标记待复核、由谁触发修改，见 `docs/discovery/0007-upstream-change-impact-policy.md`。
