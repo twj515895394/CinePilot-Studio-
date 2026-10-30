@@ -1,6 +1,6 @@
 # CinePilot Studio — Python 服务接口与 Vue/Electron 创作工作台设计
 
-> 版本：0.1（主流程与交互合同草案）
+> 版本：0.2（Agent 创作工作台/API 草案；完整管理后台页面清单见独立规格）
 > 日期：2026-10-30
 > 状态：**已经确认的产品边界**与**候选 UI/API 细节**分别记录。此文档不代表最终 OpenAPI 或 Vue 组件实现。
 > 关联：[整体产品流程](./overall-product-workflow-and-system-map.md) · [核心数据模型](./core-data-model-and-storage-contracts.md) · [项目目录规范](./project-workspace-directory-layout.md) · [Agent/Skill](./agent-skill-orchestration-and-runtime.md) · [项目隔离](./project-isolated-agent-workspaces-and-skills.md) · [阶段合同](./stage-contracts-and-artifact-map.md) · [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md)
@@ -70,6 +70,8 @@ B4 定稿并导出：镜头、角色/场景引用、提示词和生产准备文�
 ---
 
 ## 3. Vue / Electron 信息架构
+
+> **范围说明**：本文件重点描述 Agent 创作工作台的任务闭环、Python 业务模块和 API 候选。此前 3.1 的 App 层级只是早期导航草案，不能视为完整的后台页面设计。完整的项目管理后台、创意池、分集管理、产物库、资产库、审查中心、Agent 任务中心、系统设置，以及它们与创作工作台的关系，统一以 [产品信息架构与页面功能规格](./product-information-architecture-and-page-functions.md) 为准。视觉样式/UIUX 不在上述规格范围内。
 
 ### 3.1 推荐应用层级
 
