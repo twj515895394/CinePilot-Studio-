@@ -25,7 +25,8 @@ CinePilot Studio 是一个将创意编剧与影视制作规划纳入同一项目
 - **Agent 项目隔离（已确认）**：创建项目时建立独立 Agent 工作区、任务以该目录为 cwd，Skill 从系统目录按项目启用并只读链接/投射；必须从执行环境与受控查询层禁止访问其他项目目录和数据，不能仅依赖 cwd 或 Prompt；参见 [ADR-0017](../adr/0017-project-isolated-agent-workspaces-and-skill-projection.md)。
 - **阶段设计**：八阶段输入、输出、审查和交接的初版方案见 [阶段合同与产物映射](../spec/stage-contracts-and-artifact-map.md)；B2 独立、资产管理横向贯穿流程已确认。
 - **目录结构（已确认）**：新建项目即创建独立目录，项目级创意池、资产和媒体；分集下 A3–B4 阶段目录；阶段内独立产物草稿和不可覆盖定稿版本。见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)。
-- **SQLite 作用域待选择**：全系统一个关系/状态 SQLite，或每项目独立 SQLite（另需项目注册表）；参见 [SQLite 作用域讨论](./0016-sqlite-scope-and-project-portability.md)。
+- **SQLite 作用域（已确认）**：全系统共用一个系统级 SQLite，项目级 MD/JSON/媒体各自独立保存，见 [ADR-0019](../adr/0019-single-system-sqlite-with-project-content-files.md)。
+- **详细数据模型（推荐草案）**：SQLite 表组、项目与分集内容实体、阶段产物/版本、剧本场次与镜头结构、资产版本/分集变体及 AgentRun 查询映射，见 [核心数据模型与存储合同](../spec/core-data-model-and-storage-contracts.md)。
 
 ## 2. 待验证的整体形状（不是最终决定）
 
