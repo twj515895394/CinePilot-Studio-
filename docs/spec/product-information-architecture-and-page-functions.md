@@ -1,9 +1,9 @@
 # CinePilot Studio — 产品信息架构与页面功能规格
 
-> 版本：0.1（页面功能与信息架构草案，不含视觉 UI/UX 设计）
+> 版本：0.2（补齐 Agent 接入/模型配置与阶段 Skill Profile 管理页面；不含视觉 UI/UX 设计）
 > 日期：2026-10-30
 > 状态：**产品分区与页面职责推荐方案**。既有 ADR 和用户确认事实为硬约束；页面清单、导航、交互分区、具体功能均为本轮设计建议，后续由用户整体校准。
-> 关联：[整体产品流程](./overall-product-workflow-and-system-map.md) · [Python API 与 Vue/Electron 工作台](./python-api-and-vue-electron-workbench.md) · [核心数据模型](./core-data-model-and-storage-contracts.md) · [阶段合同](./stage-contracts-and-artifact-map.md) · [资产体系](./creative-asset-model-and-use.md) · [Agent/Skill 架构](./agent-skill-orchestration-and-runtime.md) · [ADR-0020：阶段整体定稿与局部编辑](../adr/0020-stage-level-approval-with-localized-editing.md)
+> 关联：[整体产品流程](./overall-product-workflow-and-system-map.md) · [Python API 与 Vue/Electron 工作台](./python-api-and-vue-electron-workbench.md) · [核心数据模型](./core-data-model-and-storage-contracts.md) · [阶段合同](./stage-contracts-and-artifact-map.md) · [资产体系](./creative-asset-model-and-use.md) · [Agent/Skill 架构](./agent-skill-orchestration-and-runtime.md) · [Agent 接入与模型管理](./agent-integration-and-model-management.md) · [Skill Registry 与阶段编排](./stage-skill-orchestration-and-registry.md) · [ADR-0020：阶段整体定稿与局部编辑](../adr/0020-stage-level-approval-with-localized-editing.md)
 
 ---
 
@@ -213,12 +213,13 @@ Agent Run 记录是执行历史；正式创作正文仍以 Artifact Revision 文
 
 | 设置页 | 管理内容 | 作用范围 |
 |---|---|---|
-| Agent Runtime | 本机/远端 Runtime 配置、可用性检测、默认运行时、凭据状态 | 系统级 |
-| Skill Registry | 系统 Skills 安装、版本、描述、阶段适用范围、启用/停用 | 系统级 |
+| Agent 接入管理 | Agent Runtime Registry、CLI/SDK 检测、Connection Profile、认证状态、能力发现、隔离资格 | 系统级 |
+| Agent 模型配置 | Adapter 动态模型目录、参数 Schema、Agent Model Profile（Agent + Model + 参数组合） | 系统级 |
+| Skill Registry | 外部来源、License/NOTICE、上游 Commit、Skill 版本、兼容性、安全审核、评测和启停 | 系统级 |
 | 存储与备份 | 系统数据根目录、共享 SQLite、项目存储根目录、备份与恢复 | 系统级 |
 | 应用设置 | 通用偏好、桌面端/服务端信息、诊断信息 | 系统级 |
 
-系统 Skill Registry 与项目 Skill Binding 必须分开：系统安装某 Skill 不代表所有项目自动启用；项目启用的 Skill 版本应可追溯。
+系统 Agent Connection / Model Profile 与项目 Agent 执行策略分开；系统安装/登记某 Skill 不代表所有项目自动启用。Agent 凭据不得复制到项目工作区；Skill 必须按项目启用并只读投射。
 
 ---
 
@@ -424,26 +425,28 @@ Agent Run 记录是执行历史；正式创作正文仍以 Artifact Revision 文
 - 查看媒体被哪些资产和镜头引用；
 - 通过媒体 ID 关联内容，不以图片文件名作为业务关联主键。
 
-### 3.8 项目 Skills / Project Skills
+### 3.8 项目 Skills / Stage Skill Profiles
 
-**目标**：让用户清楚当前项目启用了哪些创作技能，以及每个阶段 Agent 可调用哪些能力。
+**目标**：管理项目 A1–B4 八个阶段分别采用哪些专业 Skill，以及题材插件和审查能力如何组合。
 
-展示：
-- 系统 Skill 名称、用途、版本；
-- 适用阶段（A1/A2/A3/A4/B1/B2/B3/B4）；
-- 该项目是否启用；
-- 是否默认用于该阶段；
-- Skill 依赖的工具/输入能力；
-- 版本更新信息。
+每个阶段分别展示：
+- 主 Skill（允许暂时为空，并显示能力缺口）；
+- 辅助 Skill；
+- 条件/题材 Skill 及触发条件；
+- Review Skill；
+- 每个 Skill 的 CinePilot 版本、来源和 Runtime 兼容状态；
+- 调用策略（必需、推荐、按需、禁用）与执行顺序。
 
 操作：
-- 启用/禁用 Skill；
-- 为阶段选择默认 Skill 或允许的组合；
-- 查看 Skill 说明；
-- 查看某次 Agent Run 实际使用的 Skill 版本；
-- 从系统 Registry 浏览可用 Skill。
+- 从系统推荐模板初始化项目阶段配置；
+- 启用/禁用 Skill、调整主/辅/条件/审查角色；
+- 固定 Skill 版本；
+- 设置题材插件触发条件；
+- 查看 License、上游来源、NOTICE、改造差异和回归评测；
+- 为特定分集的特定阶段建立覆盖配置；
+- 查看历史 Agent Run 实际采用的 Skill Plan。
 
-项目 Skill 页面只能选择系统已注册且用户允许使用的 Skill；Skill 安装/更新属于系统设置，不在项目内直接安装任意脚本。
+系统 Skill Registry 与项目 Stage Skill Profile 必须分开：系统登记某 Skill 不代表项目自动启用；项目配置不直接安装任意外部脚本。具体 Registry 和路由规则见 [Skill Registry 与阶段编排规格](./stage-skill-orchestration-and-registry.md)。
 
 ### 3.9 项目活动与版本记录 / Activity
 
@@ -1058,12 +1061,112 @@ V1 值得支持的批量能力：
 
 ## 13. 与既有规格的关系与后续设计
 
-本规格补足上一版工作台设计缺少的**项目管理后台和产物独立管理**，并进一步细化聊天与阶段产物的联动要求。
+本规格定义管理后台与 Agent 创作工作台的页面职责，并覆盖 Agent/Model 与 Skill 管理入口。
 
-- [Python API 与 Vue/Electron 工作台 v0.1](./python-api-and-vue-electron-workbench.md)：保留后端模块与 API 候选；其旧版第 3 节的应用层级仅是初步导航，不再作为完整页面清单，应结合本规格理解。
-- [核心数据模型 v0.2](./core-data-model-and-storage-contracts.md)：本规格页面均使用同一领域对象，不新建第二套内容数据。
-- [八阶段合同](./stage-contracts-and-artifact-map.md)：各阶段必需/可选产物和 Handoff 仍以阶段合同进一步细化。
-- [资产体系](./creative-asset-model-and-use.md)：项目基础资产和分集变体由资产模块管理。
+- [Python API 与 Vue/Electron 工作台](./python-api-and-vue-electron-workbench.md)：后端模块、API 候选和创作工作台任务闭环。
+- [Agent 接入与模型管理](./agent-integration-and-model-management.md)：系统级 Agent Connection、动态模型发现、Agent Model Profile、项目/阶段/任务配置和 Run 快照。
+- [Skill Registry 与阶段编排](./stage-skill-orchestration-and-registry.md)：外部 Skill 来源治理、A1–B4 Stage Skill Profile、分集覆盖、Skill Plan 和版本追溯。
+- [Agent/Skill 运行时协同](./agent-skill-orchestration-and-runtime.md)：Stage Orchestrator、Agent Adapter、Skill Router、Handoff 与 ArtifactService 的执行衔接。
+- [核心数据模型](./core-data-model-and-storage-contracts.md)：页面共用统一领域对象，不创建第二套创作内容数据。
+- [八阶段合同](./stage-contracts-and-artifact-map.md)：各阶段必需/可选产物和 Handoff。
+- [资产体系](./creative-asset-model-and-use.md)：项目基础资产和分集变体。
 - [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md)：正式审批以阶段为单位，局部对象可编辑。
 
-**下一步建议**：用户整体确认本页面清单和职责边界后，再进行低保真线框/页面流程图与 UI/UX 设计；随后细化 OpenAPI、页面组件数据合同和开发里程碑。不要在本轮提前决定视觉样式或组件库。
+视觉样式、组件库、高保真 UIUX 仍留在后续设计；当前页面功能和配置数据边界已足以进入技术实现拆分。
+
+
+---
+
+## 14. Agent 接入与模型管理页面
+
+### 14.1 系统设置 → Agent 接入管理
+
+列表显示每个 Runtime 的：
+- 名称、接入类型（CLI / SDK / 远端 Agent Host）；
+- 安装状态、版本、执行宿主；
+- 认证状态（只显示状态，不显示凭据）；
+- 最近能力检测时间；
+- 隔离资格与测试状态；
+- 模型发现能力和可用状态。
+
+操作：
+- 自动检测本机 Agent；
+- 添加/编辑 Connection Profile；
+- 认证或刷新认证状态；
+- 测试连接；
+- 查看能力声明；
+- 启用/停用 Runtime。
+
+### 14.2 Agent 详情 → 模型与参数
+
+先选择 Agent Connection，再展示该 Adapter 实际发现的模型和支持参数：
+- 模型 ID、展示名、Provider（可识别时）；
+- 可用状态、能力来源、检测时间；
+- 是否支持显式模型选择；
+- 推理等级/输出参数的动态 Schema；
+- Runtime 默认模型选项。
+
+不支持模型发现时，显示“使用 Agent 默认模型”；不支持的参数不展示，不得硬编码统一模型列表。
+
+### 14.3 Agent Model Profile 管理
+
+用户可以把 Agent Connection + 模型选择 + Adapter 支持的参数保存为 Profile，例如“故事创作高推理”“批量整理快速模式”。Profile 不包含 Skill。
+
+### 14.4 项目设置 → Agent 执行策略
+
+项目可设置：
+- 项目默认 Agent Model Profile；
+- A1–A4、B1–B4 阶段级 Profile；
+- 分集特定阶段覆盖；
+- 单次任务启动前覆盖；
+- 当前配置的继承来源与有效配置预览。
+
+配置解析优先级为：任务覆盖 → 分集阶段覆盖 → 项目阶段配置 → 项目默认 → 系统默认。不可用模型或不支持参数应阻止启动并给出原因，不静默切换。
+
+### 14.5 Agent Run 详情
+
+显示实际执行的 Runtime/版本、Model/参数、配置来源、Skill Plan、Handoff 输入 Revision、沙箱策略和任务事件。敏感凭据不得展示或写入快照。
+
+---
+
+## 15. Skill Registry 与阶段配置页面
+
+### 15.1 系统设置 → Skill Registry
+
+列表展示 Skill 名称、来源仓库、入口路径、上游 Commit、License/NOTICE、作者、CinePilot 版本、适用阶段、Runtime 兼容、安全审查、评测状态和生命周期状态。
+
+操作包括登记来源、查看来源审计、建立导入候选、提炼/改造、运行测试、启用/停用和查看版本历史。License 未核验的候选不得作为可导入 Skill 启用。
+
+### 15.2 Skill 详情与来源审计
+
+需要显示：
+- 原始仓库和具体 Skill 路径；
+- 原始作者、许可证和 NOTICE；
+- 固定 Commit SHA 与入口文件 SHA；
+- 导入的文件/依赖清单；
+- 保留、删除、修改和新增的模块；
+- CinePilot 改造版本与回归评测结果。
+
+八个第一批候选来源及当前核验结果见 [Skill Registry 与阶段编排规格 §4](./stage-skill-orchestration-and-registry.md)。
+
+### 15.3 项目设置 → 八阶段 Stage Skill Profiles
+
+配置页固定展示 A1、A2、A3、A4、B1、B2、B3、B4 八个阶段。每阶段可以设置主 Skill、辅助 Skill、条件插件、审查 Skill、版本、调用策略和顺序。
+
+当前推荐候选状态：
+- A1：Story Idea Generator 主候选；Creative Director 辅助候选；
+- A2：Short Film Development 主候选；Creative Director 辅助；Comedy/Stephen Chow 按题材触发；
+- A3：Short Film Development 主候选；AI ShortVideo Story Engine 辅助候选；
+- A4：通用 Screenwriter 待补充；Wind Comic Screenwriter 待评估；
+- B1/B2/B4：待用户后续补充；
+- B3：AI ShortVideo Story Engine / Wind Comic 待评估，不作为默认正式主 Skill。
+
+此列表是候选状态，不代表已导入或已启用。
+
+### 15.4 分集阶段覆盖
+
+允许某个 Episode 的特定阶段覆盖项目配置，例如某集启用喜剧插件；修改只影响该分集，不改变项目默认 Profile。
+
+### 15.5 当前任务 Skill Plan 预览
+
+Agent Run 启动前展示主 Skill、辅助 Skill、条件触发结果、审查 Skill、版本、调用原因和 Runtime 兼容状态。用户可以覆盖可选 Skill。Run 启动后固定 Skill Plan 快照并显示在任务详情中。
