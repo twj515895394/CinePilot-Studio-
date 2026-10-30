@@ -15,7 +15,11 @@
 
 ## 设计讨论入口
 
-- [第一轮：需求基线与架构讨论树](docs/discovery/0001-initial-scope-and-design-tree.md)
+- [需求基线与架构讨论树（含第一、二轮已确认决策）](docs/discovery/0001-initial-scope-and-design-tree.md)
+- [第二轮定稿与第三轮讨论：分集、片段、镜头层级](docs/discovery/0002-episode-and-shot-hierarchy.md)
+- [领域词汇表：CONTEXT.md](CONTEXT.md)
+- [ADR-0001：创意点子与分集派生关系](docs/adr/0001-idea-to-work-derivation.md)
+- [ADR-0002：独立作品与分集同一领域对象](docs/adr/0002-episode-is-independent-work.md)
 - [grill-with-docs 规范](docs/process/grill-with-docs/SKILL.md)
 - [CONTEXT.md 术语格式](docs/process/grill-with-docs/CONTEXT-FORMAT.md)
 - [ADR 决策记录格式](docs/process/grill-with-docs/ADR-FORMAT.md)
