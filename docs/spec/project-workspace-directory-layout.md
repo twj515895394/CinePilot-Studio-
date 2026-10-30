@@ -116,7 +116,7 @@ Vue 的「打开剧本」先让 Python 在 SQLite 查询 \`SCR03\` 的当前已�
 
 ### 4.1 用户点击「新建项目」
 
-Python 原子地登记项目身份并创建 **项目根 + creative-pool + assets + media + episodes + .agent-work**。按项目启用的 Skills 可以在创建时设置，但不强制预先复制系统所有 Skills。系统记录项目根路径或存储位置映射；不根据用户显示名称直接拼接磁盘路径。
+Python 通过受控创建流程登记项目身份并创建 **项目根 + creative-pool + assets + media + episodes + .agent-work**；文件创建与 SQLite 登记不是同一原子事务，失败清理和恢复由开发按常规工程要求处理。按项目启用的 Skills 可以在创建时设置，但不强制预先复制系统所有 Skills。系统记录项目根路径或存储位置映射；不根据用户显示名称直接拼接磁盘路径。
 
 **不需要创建 6 份空的分集阶段目录**：分集尚未创建。用户选择 Concept 并新建 Episode 时，才创建 \`episodes/{episode_id}/\`；该集首次生成正式阶段草稿时，创建相应阶段 \`artifacts/...\` 文件夹（或者提前建立六个空目录，两者不改变产品行为，默认建议按需创建）。
 
