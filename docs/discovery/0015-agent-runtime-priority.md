@@ -1,7 +1,7 @@
 # Agent 执行源选择：V1 运行时路线（待确认）
 
 > 日期：2026-10-30
-> 状态：产品/技术重要边界，**未由用户确认**
+> 状态：**已确认方案 A，CLI 生态优先，官方 Agent SDK 可优先用于程序控制；项目隔离另有已确认 ADR**
 > 来源：[Agent / Skill 协作与运行架构](../spec/agent-skill-orchestration-and-runtime.md)、[整体产品流程](../spec/overall-product-workflow-and-system-map.md)
 
 ## 已确认
@@ -34,8 +34,22 @@ Vue Web + Electron 复用前端、Python 负责后端业务服务。Agent 负责
 - 优点：选型自由。
 - 局限：V1 开发与验收范围膨胀，违背先做稳固闭环的原则。
 
+## 本轮正式结论（2026-10-30）
+
+**用户选择 A：V1 优先使用 CLI。** 用户进一步指出现有 Agent 具备 SDK，希望尽可能采用官方 SDK 来进行程序控制。此处明确把「CLI 优先」理解为**优先利用本地 Agent 运行时及其生态**，不强制通过命令行字符串模拟；若存在可用的 Python Agent SDK（例如 Codex Python SDK / Claude Agent SDK），可以优先采用 SDK 调用本地 Agent 的能力，并在适配层保留 CLI 作为另一种接入手段。真实兼容性需要按目标版本验证。
+
+**用户新增强制边界：**
+- 创建项目时自动建立本项目 Agent 工作区；
+- Agent 执行时以该项目目录为工作目录；
+- Skill 集中安装在系统指定目录，按项目启用并链接/只读投射到该项目；
+- **禁止 Agent 访问其他项目目录**，要由真实文件系统和工具访问边界保障，而非仅靠 cwd / Prompt。
+
+已落档：[ADR-0016](../adr/0016-cli-first-with-official-agent-sdk.md)、[ADR-0017](../adr/0017-project-isolated-agent-workspaces-and-skill-projection.md)、[详细工作区隔离设计](../spec/project-isolated-agent-workspaces-and-skills.md)。
+
+**尚未定稿**：首个 Agent 供应商、SDK/CLI 版本、不同 OS 的沙箱、Skill 目录映射和运行时多模态能力。下一步先设计 Vue 工作台主流程，再安排实际执行宿主验证。
+
 ## 推荐 A 的边界
 
 不把选 A 等同于必须 Codex CLI 独家支持，也不等同于 Web 可自动复用用户本机账户。需要再评估具体 CLI 的能力与首发次序，先按最小可用运行时完成 A4→B1→B2→B3→B4 的闭环。
 
-**当前唯一核心问题**：首期 Agent 执行源是否以 **A：CLI 优先、API 后续** 为准？若有不同偏好，可选 B 或 C。本问题只决定优先路线，不进入具体终端命令、异常重试或供应商版本细节。
+**已确认 A**：CLI 运行时生态优先、SDK 可用于程序控制；直接模型 API 后续扩展。本轮不对具体终端命令、SDK 多模态能力或 OS 隔离技术作未经验证的承诺。
