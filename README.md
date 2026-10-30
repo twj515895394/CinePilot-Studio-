@@ -18,7 +18,7 @@
 - 前端：**Vue**（Web 管理后台与创作工作台）。
 - 后端：**Python**（业务服务、Agent/Skill 编排、版本与数据管理）。
 - 桌面端：**Electron**（复用 Vue 前端，提供桌面应用）。
-- 数据持久化：**Markdown + JSON + SQLite**（按字段唯一权威，统一服务读写）。
+- 数据持久化：**Markdown + JSON + 系统级单 SQLite**（按字段唯一权威，统一服务读写；所有项目共用 SQLite，创作正文与媒体仍保存在各项目目录）。
 
 Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行/打包方式尚未定稿，不得在未经确认时将推荐方案写成已批准选型。
 
@@ -44,8 +44,8 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [Agent / Skill 协作与运行架构（详细草案）](docs/spec/agent-skill-orchestration-and-runtime.md)
 - [Agent V1 运行路线：CLI 生态优先、官方 Agent SDK 可用时优先评估（已确认）](docs/discovery/0015-agent-runtime-priority.md)
 - [项目隔离 Agent 工作区与 Skill 只读投射（设计草案）](docs/spec/project-isolated-agent-workspaces-and-skills.md)
-- [项目工作区目录规范 v0.2（目录分层已确认，SQLite 位置待确认）](docs/spec/project-workspace-directory-layout.md)
-- [SQLite 数据库放在哪里：全系统一个库还是每项目一个库（待选择）](docs/discovery/0016-sqlite-scope-and-project-portability.md)
+- [项目工作区目录规范 v0.3（阶段目录 + 系统单 SQLite 均已确认）](docs/spec/project-workspace-directory-layout.md)
+- [SQLite 作用域：全系统共用一个数据库（已确认）](docs/discovery/0016-sqlite-scope-and-project-portability.md)
 - [项目基础资产与分集变体确认记录](docs/discovery/0014-project-asset-episode-variants.md)
 - [B2 与横向资产管理的确认记录](docs/discovery/0013-production-breakdown-and-asset-lifecycle.md)
 - [领域词汇表：CONTEXT.md](CONTEXT.md)
@@ -67,6 +67,7 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [ADR-0016：CLI 生态优先，可通过官方 Agent SDK 控制](docs/adr/0016-cli-first-with-official-agent-sdk.md)
 - [ADR-0017：项目独立 Agent 工作区、Skill 按项目投射，禁止访问其他项目](docs/adr/0017-project-isolated-agent-workspaces-and-skill-projection.md)
 - [ADR-0018：按项目创意/资产、分集阶段、产物草稿/版本组织目录](docs/adr/0018-project-stage-artifacts-and-revisions-layout.md)
+- [ADR-0019：系统级单 SQLite、各项目内容文件独立保存](docs/adr/0019-single-system-sqlite-with-project-content-files.md)
 - [grill-with-docs 规范](docs/process/grill-with-docs/SKILL.md)
 - [CONTEXT.md 术语格式](docs/process/grill-with-docs/CONTEXT-FORMAT.md)
 - [ADR 决策记录格式](docs/process/grill-with-docs/ADR-FORMAT.md)
