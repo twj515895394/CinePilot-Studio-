@@ -1,7 +1,7 @@
 # 第十二轮 Grill：SQLite + Markdown/JSON 的内容权威与 Web UI 读取模型
 
 > 日期：2026-10-30  
-> 状态：第十一轮 B 已定稿；本轮仅作候选方案，**尚未确认存储实现**  
+> 状态：第十二轮方案 B 已确认；具体跨载体写入策略仍待决定  
 > 规范：[grill-with-docs](../process/grill-with-docs/SKILL.md)  
 > 依据：[总体需求](./0001-initial-scope-and-design-tree.md)、[第十轮](./0009-agent-handoff-payload.md)、[第十一轮](./0010-controlled-on-demand-retrieval.md)、[ADR-0007](../adr/0007-approved-artifact-revision-policy.md)、[ADR-0011](../adr/0011-mandatory-handoff-context-controlled-retrieval.md)
 
@@ -84,6 +84,10 @@ Web UI 不要求所有正文都存储为数据库单元格。后台只需通过*
 
 推荐 B，它以最小额外技术满足 Agent 创作、文件产物可读、Web 管理与按需检索。需要强调：此推荐**不是为同一剧本文本保存三份可以分别编辑的数据**；例如剧本文本由 Markdown 负责，JSON 中不再存一份可修改的重复全文，SQLite 中只保存需要用于定位、展示和查询的 ID、标题索引或派生摘要。
 
-**第十二轮唯一问题**：三种数据权威模型中，你选择 A「SQLite 唯一权威」、B「Markdown/JSON/SQLite 按字段职责各自权威（推荐）」还是 C「文件完全权威、SQLite 可重建索引」？
+**第十二轮正式结论（2026-10-30，已确认）**：用户选择 **B**——Markdown 为创作正文的权威，JSON 为结构化产物的权威，SQLite 为关系、版本及审批状态的权威；同一字段不允许多处独立写入，UI 与 Agent 必须通过统一业务服务处理读写。已归档 [ADR-0012](../adr/0012-field-owned-markdown-json-sqlite.md)。
 
-**未决问题**：具体目录结构、跨文件及数据库写入失败恢复、富文本编辑器实现、数据库 Schema、中文全文检索、媒体文件管理、版本粒度与阶段产物合同。与本轮无关，不提前决定。
+这确立的是**逻辑字段的唯一事实来源**，不意味着把同一段剧本全文放进 Markdown 和 JSON 里分别维护，也不意味着 SQLite 的展示索引可被当作正文的另一个修改入口。管理后台能通过 SQLite 定位正确的文件产物和版本，展示创意、剧本、导演和分镜等完整内容。
+
+**下一轮的问题**：当一个产物保存需要同时写入内容文件与数据库元数据时，如何避免断电、程序崩溃造成“索引已更新但文件未保存”的不一致？见 [第十三轮讨论](./0012-cross-store-publish-consistency.md)。
+
+**仍未决定**：具体字段映射、目录和版本文件命名、跨载体发布原子性与恢复、富文本编辑器、数据库 Schema、全文索引、媒体文件、草稿保存粒度与阶段产物合同。
