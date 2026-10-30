@@ -1,8 +1,8 @@
 # CinePilot Studio — Agent / Skill 协作与运行架构
 
-> 版本：0.1（整体设计草案）
+> 版本：0.2（CLI 优先、官方 Agent SDK、项目工作区隔离已确认）
 > 日期：2026-10-30
-> 状态：**已有 ADR 和用户约束**与**本文件推荐的 Agent 实现设计**分开；V1 运行时选择未确认
+> 状态：**V1 CLI 生态优先、可优先通过官方 Agent SDK 控制，以及项目工作区强隔离均已确认**；首个具体 Agent/SDK 和执行沙箱实现未确认
 > 依据：[整体设计总览](./overall-product-workflow-and-system-map.md)、[八阶段合同](./stage-contracts-and-artifact-map.md)、[资产模型](./creative-asset-model-and-use.md)、[ADR-0007/0008/0009](../adr/)、[ADR-0010](../adr/0010-compact-versioned-agent-handoff.md)、[ADR-0011](../adr/0011-mandatory-handoff-context-controlled-retrieval.md)、[ADR-0012](../adr/0012-field-owned-markdown-json-sqlite.md)、[ADR-0015](../adr/0015-project-assets-with-episode-variants.md)
 
 ---
@@ -19,6 +19,9 @@ V1 目标：
 - 预留 Agent CLI/SDK/API 适配器，不在主业务代码写死供应商命令格式。
 
 **V1 非目标**：执行实际图像/视频生成 API、通用多 Agent 自治平台、独立知识库部署、自动替用户批准产物、复杂跨项目共享。
+
+**新增明确要求（已确认）**：每创建一个 Project 就为该项目建立独立 Agent 工作区，Agent 的执行 cwd 定位该项目；所需专业 Skill 来自系统集中注册目录，只允许将当前项目启用的 Skill 只读链接/投射到隔离工作区；**严格禁止 Agent 访问其他项目文件目录**。设置 cwd 不是隔离机制，系统必须提供真正的文件系统与工具查询权限边界。实现详见 [项目隔离 Agent 工作区与 Skill 挂载](./project-isolated-agent-workspaces-and-skills.md)、[ADR-0016](../adr/0016-cli-first-with-official-agent-sdk.md) 与 [ADR-0017](../adr/0017-project-isolated-agent-workspaces-and-skill-projection.md)。
+
 
 ---
 
@@ -274,11 +277,11 @@ get_capabilities(runtime) -> tool_calling, image_input, session_resume, structur
 - **远端 Agent Host/CLI**：Web 用户经 Python 服务提交任务，CLI 在受控服务器/Agent Host 上执行；不能把远端网站操作理解为浏览器能直接调用终端用户的本地 CLI。多用户时还需要任务/文件/凭证隔离。
 - **SDK/API**：可以作为同一 Adapter 接口下的另一实现，便于服务端部署和模型能力管理，但用户尚未批准 V1 必须接入外部 API。
 
-### 8.3 推荐 V1 路径（待确认）
+### 8.3 已确认的 V1 路线与未定细节
 
-优先保证一个真实可用的执行运行时和端到端创作闭环，再把第二个 CLI 或 API Runtime 作为适配器扩展；不要一上来同时维护多种 CLI 会话语义和复杂多 Agent 迁移。项目本身必须保留 Agent Runtime Adapter 层，避免之后替换供应商需要改写阶段代码。
+**已确认**：V1 优先 CLI 运行时生态，只要求优先跑通一个可靠的 Agent；如目标 Agent 有官方 Agent SDK，优先评估 SDK 作为 Python 的程序控制接口，必要时再通过 CLI 或其他受控协议接入；直接模型 API 后续扩展。SDK 与 CLI 是否支持 Skill 加载、项目 cwd、多模态媒体和工具权限，需要按具体版本验证。项目必须具备统一 Runtime Adapter，让后续供应商切换不需要改写阶段业务。
 
-**尚需一个产品级决策**：V1 是以本地 CLI（如 Codex/Claude）为首要 Agent 执行源，还是首期要求本地 CLI 与云端 API 并行。这个决策会明显影响 Web 和 Electron 的可用部署形态，应在技术架构定稿时向用户确认。
+**仍未定稿**：先实际支持 Codex 或 Claude、具体 SDK/CLI 版本、凭据与权限隔离实现、Web/桌面进程宿主。Web 端若运行于远端，必须由 Python 服务所在主机或独立 Agent Host 执行，而非直接调用浏览器用户电脑上的 CLI。严格的按项目文件权限是已确认要求，具体隔离机制不能自动降级。
 
 ---
 
@@ -312,10 +315,10 @@ Skill 只描述创作工作、输入依据、目标产物和质量提示；是�
 
 ## 10. 本设计完成后，下一步工作
 
-1. **先确认 Agent 运行源**：V1 首要支持本机 CLI、远端 CLI Agent Host，还是直接 SDK/API；这将影响 Python 执行宿主和 Electron/Web 体验。
+1. **已确认运行路线**：CLI 生态优先、可用时优先用官方 Agent SDK 作为控制接口；**待完成**具体首个 Codex/Claude Runtime 与项目沙箱验证。
 2. 将上述能力分解为具体 Python 服务/接口合同（Agent Adapter、Artifact Service、Media Service、Task API）。
 3. 设计 Vue 工作台右侧聊天 + 中间产物面板的真实页面状态与交互。
 4. 再确定数据实体与 JSON/Markdown Schema、SQLite 关系、任务事件格式。
 5. 将 V1 场景验收与开发任务拆解，以可运行闭环检验，而不是只编写大量抽象架构文档。
 
-**提醒**：本文件中“Agent Runtime Adapter”“按阶段逻辑会话”“推荐工具列表”“CLI 优先”等均是工程与产品设计建议；未经过用户确认前不建立新的 ADR 把它们标记为已定稿。
+**确认/草案边界**：CLI 运行时生态优先、可优先通过官方 Agent SDK 控制、项目工作区独立、Skill 集中管理并只读投射、其他项目目录不可访问为用户已确认的架构约束；模块内部接口、运行时首次供应商、SDK 能力与目录结构仍是推荐方案。下一阶段优先设计 Vue/Electron 工作台的用户交互和 Agent 任务体验。
