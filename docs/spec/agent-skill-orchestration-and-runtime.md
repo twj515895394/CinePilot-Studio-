@@ -1,9 +1,9 @@
 # CinePilot Studio — Agent / Skill 协作与运行架构
 
-> 版本：0.2（CLI 优先、官方 Agent SDK、项目工作区隔离已确认）
+> 版本：0.3（补齐 Agent/Model Profile、Stage Skill Profile、Skill Router 与 Run 快照合同）
 > 日期：2026-10-30
 > 状态：**V1 CLI 生态优先、可优先通过官方 Agent SDK 控制，以及项目工作区强隔离均已确认**；首个具体 Agent/SDK 和执行沙箱实现未确认
-> 依据：[整体设计总览](./overall-product-workflow-and-system-map.md)、[八阶段合同](./stage-contracts-and-artifact-map.md)、[资产模型](./creative-asset-model-and-use.md)、[ADR-0007/0008/0009](../adr/)、[ADR-0010](../adr/0010-compact-versioned-agent-handoff.md)、[ADR-0011](../adr/0011-mandatory-handoff-context-controlled-retrieval.md)、[ADR-0012](../adr/0012-field-owned-markdown-json-sqlite.md)、[ADR-0015](../adr/0015-project-assets-with-episode-variants.md)
+ > 依据：[Agent 接入与模型管理](./agent-integration-and-model-management.md)、[Skill Registry 与阶段编排](./stage-skill-orchestration-and-registry.md)、[整体设计总览](./overall-product-workflow-and-system-map.md)、[八阶段合同](./stage-contracts-and-artifact-map.md)、[资产模型](./creative-asset-model-and-use.md)、[ADR-0007/0008/0009](../adr/)、[ADR-0010](../adr/0010-compact-versioned-agent-handoff.md)、[ADR-0011](../adr/0011-mandatory-handoff-context-controlled-retrieval.md)、[ADR-0012](../adr/0012-field-owned-markdown-json-sqlite.md)、[ADR-0015](../adr/0015-project-assets-with-episode-variants.md)
 
 ---
 
@@ -83,47 +83,40 @@ Vue Web UI                       Electron (复用 Vue)
 
 ---
 
-## 4. Agent 与专业 Skill：谁路由、何时调用
+## 4. Agent、Model 与 Skill 的职责分离和配置解析
 
-**推荐 V1：一个对话入口，系统路由到专业 Skill，而不是先建固定的 8 个专属 Agent 服务。**
+本节只定义运行时协同边界，具体配置对象、页面和字段以两份专项规格为准：
 
-### 4.1 意图类型（草案）
+- [Agent 接入与模型管理](./agent-integration-and-model-management.md)：Runtime Registry、Adapter、Connection Profile、动态模型发现、Agent Model Profile、配置继承和执行快照。
+- [Skill Registry 与阶段 Skill 编排](./stage-skill-orchestration-and-registry.md)：外部来源治理、系统 Skill Registry、A1–B4 Stage Skill Profile、项目/分集/任务覆盖、Skill Router 和 Skill Plan。
 
-- **对话与探索**：回答问题、讨论创意、比较方案。不自动保存为正式产物。
-- **生成/续写**：在当前阶段创作新草稿或扩展候选方案。
-- **定点修改**：只修改 Scene S03、Segment P05、Shot SH10 或某一角色变体。
-- **评审/解释**：按阶段合同检查已有草稿，给建议和差异。
-- **结构化资产操作**：创建角色草稿、添加参考媒体、为分集选择资产变体。
-- **阶段/版本操作**：用户在 UI 显式确认后由业务服务执行，如定稿、进入下一阶段、沿用旧下游版本。
-- **批量任务**：对一批符合阶段条件的分集逐集执行，同一模型或 Skill 可以复用配置但不混合不同集的版本和结果。
+### 4.1 三个独立维度
 
-### 4.2 专业 Skill 建议组合
-
-| 业务阶段 | 主 Skill（建议） | 可能组合的辅助 Skill |
+| 维度 | 解决的问题 | 由谁负责 |
 |---|---|---|
-| A1 点子 | Idea Discovery | 题材/创意评估 |
-| A2 创意方向 | Concept Development | 比较/筛选 |
-| A3 故事 | Story Architect | 类型剧情技能、叙事审查 |
-| A4 剧本 | Screenwriter | 对白、风格、剧本校验 |
-| B1 导演 | Director | 表演、视听风格 |
-| B2 制作拆解 | Breakdown Planner | 资产需求核对、场次映射校验 |
-| B3 分镜 | Storyboard/Shot Designer | 动作连续性、角色一致性 |
-| B4 提示词 | Video Prompt Engineer | 模型适配、提示词一致性 |
+| Agent Runtime | 谁来执行任务、如何启动/接收事件/调用工具 | Agent Registry + Agent Adapter |
+| Model | 该 Runtime 本次使用哪个模型和支持的参数 | Model Discovery + Agent Model Profile |
+| Skill | 当前阶段采用什么创作方法、辅助模块和质量检查 | Skill Registry + Stage Skill Profile + Skill Router |
 
-这些是**能力角色**，不等于必须拆成 8 个文件仓库、8 个 CLI 会话、8 个付费模型或 8 个后台进程。支持根据实际 Skill 质量把相近能力合并。
+Skill 不绑定特定 Agent/Model；Agent Model Profile 不包含 Skill。Stage Orchestrator 在启动 Run 时分别解析 Agent/Model Profile 与 Stage Skill Profile，再组合成 Run Plan。
 
-### 4.3 路由策略
+### 4.2 Stage Skill Profile 与候选映射
 
-1. 系统先从 UI 上下文定位项目/分集/阶段/当前选中的内容。**用户显式目标优先于自然语言模糊推断**。
-2. 分流规则先判断：只读讨论、草稿操作、正式阶段推进、资产操作。
-3. 代码校验权限、正式阶段准入与上游版本是否存在。
-4. Router 从允许的 Skill 清单选择主 Skill，可附加少量专用检查/风格 Skill。
-5. 选取 Agent Runtime Adapter 执行。用户应能在 UI 查看将使用的目标阶段和 Skill，后续可添加手动覆盖选项。
-6. Agent 输出必须进入对应草稿/产物服务；纯聊天不等于已持久化定稿。
+每个 A1–B4 阶段拥有独立 Stage Skill Profile，可配置主 Skill、辅助 Skill、条件/题材 Skill、审查 Skill、版本、调用策略和执行顺序。一个 Skill 可跨阶段复用，一个阶段可组合多个 Skill。
 
-**不推荐**：每次用户聊天让 Agent 把项目的 8 个 Skill 和每份长文档都装载；也不推荐在 Prompt 里让 Agent 自己决定能否越过阶段门禁。
+用户提供的第一批八个候选及其阶段映射、License、上游 Commit 与适配风险，统一记录在 [Skill Registry 与阶段编排规格 §4–5](./stage-skill-orchestration-and-registry.md)。该映射仍是候选评估方案；B1/B2/B4 的缺失 Skill 由用户后续补充。能力角色名称不等于已导入 Skill。
 
----
+### 4.3 Skill Router 与执行计划
+
+Skill Router 是 Python 编排层的规则化能力，不是仅靠一个大 Prompt 或让 Agent 自己决定。它读取当前项目/阶段/任务范围、有效 Stage Skill Profile、题材条件、已启用 Skill 版本和 Agent Runtime 兼容性，输出可解释 Skill Plan。
+
+每个 Run 默认一个 Primary Skill 负责主要草稿；Supporting Skill 提供限定范围的方法；Conditional Skill 按条件加载；Review Skill 默认诊断而不擅自改写。阶段合同、用户约束、安全规则优先于外部 Skill 指令。
+
+### 4.4 Agent/Model Profile 解析
+
+Agent/Model 配置解析顺序为：Task Override → Episode Stage Override → Project Stage Route → Project Default → System Default。Skill 配置解析顺序为：Task Skill Override → Episode Stage Override → Project Stage Skill Profile → System Stage Template。两条配置链分别解析、分别快照，不相互覆盖。
+
+Adapter 必须动态声明 Runtime 能力、模型目录和参数 Schema；不支持显式模型选择时使用 Runtime Default，不得硬编码或虚构通用模型列表。详细规则见 Agent 接入规格。
 
 ## 5. 会话与任务：避免长期上下文膨胀
 
@@ -285,40 +278,39 @@ get_capabilities(runtime) -> tool_calling, image_input, session_resume, structur
 
 ---
 
-## 9. Skill 注册与产物合同（推荐）
+## 9. Skill 输入/输出合同与 ArtifactService
 
-### 9.1 注册描述建议
+Skill Registry 负责来源、版本、能力、兼容性和阶段绑定；ArtifactService 负责 CinePilot 正式产物的结构与保存。外部 Skill 的输出不能直接视为 CinePilot 定稿。
 
-~~~yaml
-skill_id: storyboard_shot_designer
-version: 0.1.0
-stages: [B3]
-intents: [create_shots, revise_shot, review_shots]
-required_approved_sources: [screenplay, director, breakdown]
-required_tools: [get_segment, get_scene, get_asset, list_asset_media, submit_draft]
-optional_capabilities: [image_input]
-output_contract: shot_plan
-~~~
+### 9.1 Skill 执行合同
 
-Skill 只描述创作工作、输入依据、目标产物和质量提示；是否允许执行由 Python 代码检查，不能依赖 Skill 在提示词里“自觉”。
+每个 Skill Version 应声明：
+- 能力标签、适用阶段和任务意图；
+- 必需输入、可选输入、受控工具需求；
+- 输出 Artifact 类型和字段映射；
+- 依赖 references、脚本、模型或外部工具；
+- 运行时兼容性与安全审核；
+- License、作者、来源 Commit、NOTICE 和改造说明。
 
-### 9.2 可观察、可测试的最小链路
+具体 Registry 字段和阶段 Profile 见 [Skill Registry 与阶段编排规格](./stage-skill-orchestration-and-registry.md)。
 
-- 给 A4 一个已定稿故事版本，能运行剧本 Skill，并在后台出现剧本草稿 + 场次索引。
-- 给 B2 已定稿片段 P05，能运行 B3 专业 Skill，查到指定场次/角色资产，只产生作用域内镜头草稿。
-- 指定 R01@rev3 + EP03 变体时，Agent 取得的是匹配本集的角色描述/媒体，而不是错误分集的造型。
-- 用户点击定稿后，旧定稿仍能打开，下游正式阶段能以新版本 Handoff 启动。
-- 上游被修改后，下游标记待复核而不是自动重新生成。
-- 重新打开 Vue Web/Electron 工作台，可以从持久化存储恢复正确的内容和任务记录，而非依赖之前的聊天窗口。
+### 9.2 输出适配和校验
 
----
+- Agent 按 Skill Plan 执行，提交候选 Markdown/JSON 草稿。
+- Skill Adapter 将外部 Skill 的原始输出映射为 CinePilot 阶段合同。
+- ArtifactService 校验 Schema、对象归属、来源 Revision、修改范围和引用关系。
+- 校验成功后才写入草稿版本；模型回复“完成”不等于已保存。
+- StageService 仍负责阶段整体审查和用户定稿；Skill 不能直接批准阶段。
+- Wind Comic 等外部 Skill 即使输出 scenes + shots，也必须按 CinePilot A4/B2/B3 阶段边界拆分，不允许跳过中间阶段。
 
-## 10. 本设计完成后，下一步工作
+### 9.3 版本和回归
 
-1. **已确认运行路线**：CLI 生态优先、可用时优先用官方 Agent SDK 作为控制接口；**待完成**具体首个 Codex/Claude Runtime 与项目沙箱验证。
-2. 将上述能力分解为具体 Python 服务/接口合同（Agent Adapter、Artifact Service、Media Service、Task API）。
-3. 设计 Vue 工作台右侧聊天 + 中间产物面板的真实页面状态与交互。
-4. 再确定数据实体与 JSON/Markdown Schema、SQLite 关系、任务事件格式。
-5. 将 V1 场景验收与开发任务拆解，以可运行闭环检验，而不是只编写大量抽象架构文档。
+每次 Run 固定 Skill Plan 与每个 Skill 的 CinePilot Version、上游 Commit 和入口文件 SHA。升级产生候选版本，经过 License、安全、Runtime 兼容、结构和质量回归后再启用；历史 Run 和已定稿产物不因 Skill 更新自动重做。
 
-**确认/草案边界**：CLI 运行时生态优先、可优先通过官方 Agent SDK 控制、项目工作区独立、Skill 集中管理并只读投射、其他项目目录不可访问为用户已确认的架构约束；模块内部接口、运行时首次供应商、SDK 能力与目录结构仍是推荐方案。下一阶段优先设计 Vue/Electron 工作台的用户交互和 Agent 任务体验。
+## 10. 开发启动与下一步
+
+完整的开发顺序和可执行验收见 [开发启动与实施路线图](./development-kickoff-and-implementation-roadmap.md)。
+
+建议先完成最小垂直闭环：Project/Workspace/SQLite → Artifact Draft/Revision/StageApproval → Agent Adapter/项目隔离 → Skill Registry/Stage Profile/Skill Plan → 单一 A1 或 A3 任务端到端生成并保存草稿。然后逐步扩展八阶段编辑器、资产、批量任务和导出。
+
+**确认/草案边界**：CLI 优先、官方 Agent SDK 可用时优先评估、项目隔离、统一服务写入、阶段整体定稿、上游变化只标记下游待复核均为已确认约束；具体首个 Runtime、模型目录能力、沙箱实现、Skill 质量评测和各阶段缺失 Skill 仍需验证/补充。
