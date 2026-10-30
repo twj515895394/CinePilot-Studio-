@@ -1,7 +1,7 @@
 # CinePilot Studio — 需求基线与架构讨论树（第 1 轮）
 
 > 日期：2026-10-30
-> 状态：需求基线 + 前十一轮决定已确认；其余架构提案仍待讨论（**提案未等同于决策**）
+> 状态：需求基线 + 前十二轮决定已确认；其余架构提案仍待讨论（**提案未等同于决策**）
 > 工作方式：遵循 [grill-with-docs](../process/grill-with-docs/SKILL.md)，逐个问题讨论、验证、定稿；术语经确认后更新 CONTEXT.md，只有真正满足条件的架构决策才建立 ADR。
 > 来源：用户本轮需求及此前关于独立短视频、创意编剧与影视制作流水线的讨论。
 
@@ -78,7 +78,7 @@ CinePilot Studio（单一产品）
 角色与角色设定、场景与场景设定、世界观、服装道具、风格规范、参考图、声画参考、镜头提示词是**可被多个内容单元引用的资产**；不能简单复制多份后失去一致性。
 资产需要区分项目级共享定义、分集级选择/覆写、片段级使用、镜头级实际引用及版本钉选。
 
-## 4. 持久化三件套的建议职责（待决）
+## 4. 持久化三件套的已确认权威分工（第十二轮）
 
 | 载体 | 候选职责 | 风险点 |
 |---|---|---|
@@ -86,7 +86,7 @@ CinePilot Studio（单一产品）
 | JSON | 具 Schema 的内容实体、场景/片段/镜头、prompt 与 handoff 清单 | Schema 演化、版本迁移、嵌套增量更新 |
 | SQLite | 项目目录索引、稳定 ID、实体关系、版本/审批/操作索引、任务/会话查询 | 多进程一致性、数据库与文件提交的原子性 |
 
-**重要原则候选**：同一字段必须明确唯一写入权威；不能让 Markdown、JSON、SQLite 三份都各自声称是唯一真实来源。由受控写入服务提交产物，Agent 和 Web UI 经过相同校验/版本控制。
+**第十二轮已确认方案 B**：Markdown、JSON、SQLite 分别负责创作正文、结构化产物、关系和版本审批；每一字段只设一个写入权威，Agent 和 Web UI 统一经业务服务读写。参见 [ADR-0012](../adr/0012-field-owned-markdown-json-sqlite.md)。
 
 ## 5. Agent / Skill / handoff 机制建议（待决）
 
@@ -156,4 +156,4 @@ CinePilot Studio（单一产品）
 
 **已确认方案 A**：`项目 → 分集（独立作品）`，每集独立剧本，可选剧情连续性，不新增 `作品` 这一中间层级。正式领域词汇见 [CONTEXT.md](../../CONTEXT.md)，重要取舍见 [ADR-0002](../adr/0002-episode-is-independent-work.md)。
 
-**第三、四轮后续结论**：参见 [第三轮片段层级](./0002-episode-and-shot-hierarchy.md) 和 [第四轮剧本场次映射](./0003-screenplay-scene-to-segment-mapping.md)。[第五轮](./0004-idea-concept-episode-lifecycle.md) 已确认创意方向独立管理；[第六轮](./0005-idea-concept-library-scope.md) 已确认项目独立创意池；[第七轮](./0006-approved-artifact-revision-policy.md) 已确认不可覆盖旧定稿；[第八轮](./0007-upstream-change-impact-policy.md) 已确认下游待复核策略；[第九轮](./0008-stage-gate-and-handoff.md) 已确认正式阶段准入；[第十轮](./0009-agent-handoff-payload.md) 已确认精简、版本锚定 Handoff；[第十一轮](./0010-controlled-on-demand-retrieval.md) 已确认必要事实预取与受控按需检索；当前 [第十二轮](./0011-storage-authority-and-admin-ui.md) 讨论 SQLite/Markdown/JSON 的字段权威与后台统一读取。
+**第三、四轮后续结论**：参见 [第三轮片段层级](./0002-episode-and-shot-hierarchy.md) 和 [第四轮剧本场次映射](./0003-screenplay-scene-to-segment-mapping.md)。[第五轮](./0004-idea-concept-episode-lifecycle.md) 已确认创意方向独立管理；[第六轮](./0005-idea-concept-library-scope.md) 已确认项目独立创意池；[第七轮](./0006-approved-artifact-revision-policy.md) 已确认不可覆盖旧定稿；[第八轮](./0007-upstream-change-impact-policy.md) 已确认下游待复核策略；[第九轮](./0008-stage-gate-and-handoff.md) 已确认正式阶段准入；[第十轮](./0009-agent-handoff-payload.md) 已确认精简、版本锚定 Handoff；[第十一轮](./0010-controlled-on-demand-retrieval.md) 已确认必要事实预取与受控按需检索；[第十二轮](./0011-storage-authority-and-admin-ui.md) 已确认数据权威分工；当前 [第十三轮](./0012-cross-store-publish-consistency.md) 讨论文件与数据库的安全发布。
