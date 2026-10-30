@@ -1,7 +1,7 @@
 # 第七轮 Grill：已定稿阶段产物在 UI 或 Agent 中修改时如何保存
 
 > 日期：2026-10-30
-> 状态：第六轮已确认；第七轮待选择
+> 状态：第七轮方案 B 已确认；第八轮另见后续讨论记录
 > 规范：[grill-with-docs](../process/grill-with-docs/SKILL.md)
 > 依据：[需求基线](./0001-initial-scope-and-design-tree.md)、[ADR-0004](../adr/0004-screenplay-scene-to-director-segment.md)、[ADR-0006](../adr/0006-project-local-idea-pools.md)
 
@@ -41,4 +41,8 @@ EP03 剧本 v3 已定稿，导演片段与分镜都基于剧本 v3。创作者�
 
 ## 第七轮唯一问题
 
-**是否同意：凡已定稿的阶段产物，无论从 UI 还是 Agent 修改，都先生成新的草稿版本；旧定稿保留，用户确认后再形成新定稿？**
+**第七轮已确认方案 B（2026-10-30）**：不允许直接覆盖已定稿阶段产物，UI/Agent 发起修改均先产生新草稿，用户再次确认后生成新定稿；保留旧定稿及下游原有成果与其上游版本引用。
+
+已同步 [CONTEXT.md](../../CONTEXT.md) 并归档 [ADR-0007](../adr/0007-approved-artifact-revision-policy.md)。
+
+**尚未确定**：草稿自动保存机制、版本粒度、下游重新评估策略以及数据存储实现。下一轮讨论见 [第八轮：上游定稿变化后的下游处理](./0007-upstream-change-impact-policy.md)。
