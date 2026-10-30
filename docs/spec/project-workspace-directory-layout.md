@@ -1,7 +1,7 @@
-# CinePilot Studio — 项目工作区目录规范（v0.2，目录分层已确认）
+# CinePilot Studio — 项目工作区目录规范（v0.3，目录分层及系统单 SQLite 已确认）
 
 > 日期：2026-10-30
-> 状态：**用户已确认方案 A（项目级创意/资产、分集级阶段、阶段内产物及草稿/版本分离）**。下面的示意文件名/Schema 是实施提案；SQLite 是一个系统级文件还是每个项目单独一个文件尚待明确。见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md) 与 [SQLite 数据库作用域讨论](../discovery/0016-sqlite-scope-and-project-portability.md)。
+> 状态：**已确认**目录分层方案 A + 全系统单 SQLite；具体文件名和 Schema 为实施提案。参见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)、[ADR-0019](../adr/0019-single-system-sqlite-with-project-content-files.md)。
 > 前置：[整体产品总览](./overall-product-workflow-and-system-map.md) / [阶段合同](./stage-contracts-and-artifact-map.md) / [资产模型](./creative-asset-model-and-use.md) / [Agent 工作区隔离](./project-isolated-agent-workspaces-and-skills.md) / [ADR-0012](../adr/0012-field-owned-markdown-json-sqlite.md) / [ADR-0013](../adr/0013-file-first-version-publication.md)
 
 ## 1. 为什么现在确定目录结构
@@ -10,12 +10,12 @@ Vue/Electron「创建项目」后，Python 应立即创建独立工作区。以�
 
 此前的总览与安全文档都包含目录示意，但没有确定统一目录规范；在 UI 和数据 Schema 之前补齐这一步。
 
-## 2. 已确认项目目录分层（系统侧 SQLite 位置仍待选择）
+## 2. 已确认项目目录分层与系统级 SQLite
 
 ~~~text
 cinepilot-data/                        # 由系统配置的总数据根；不是 Agent cwd
 ├── app/
-│   ├── cinepilot.sqlite              # 候选 A：系统级关系/版本/审批数据库（待确认物理作用域）
+│   ├── cinepilot.sqlite              # 已确认：系统级关系/版本/审批数据库（物理数据根可配置）
 │   └── private/                      # 凭据、系统私有配置；不可让 Agent 读取
 ├── skill-registry/                   # 系统安装/维护的 Skills 来源（不可全量暴露）
 └── projects/
@@ -139,15 +139,16 @@ Python 通过受控创建流程登记项目身份并创建 **项目根 + creativ
 ## 6. 不能忽略的安全边界
 
 - \`projects/P001/\` 是项目的**物理工作区**，但 Agent 的操作系统/容器/沙箱实际可见范围仍须限制为 P001 的允许内容及只读技能；绝不能因此允许跨目录读取兄弟项目。
-- 系统/项目 SQLite 数据库文件、系统私有凭据、未启用的 Skills、其他项目根目录不向 Agent 暴露。SQLite 的**物理作用域仍待确认**，无论是否在项目根内，都不能让 Agent 直接读写状态数据库。
+- 系统级 SQLite 数据库文件、系统私有凭据、未启用的 Skills、其他项目根目录不向 Agent 暴露；数据库只由 Python 业务服务读取和更新，Agent 不得直接操作 SQLite。
 - Skill 来自系统 Registry，运行时投射至隔离环境兼容目标 Agent 的发现目录；项目目录中的 \`.agent-skills\` 仅是逻辑位置，实际是否用符号链接或快照按平台实现。
 - 使用稳定 ID、服务端安全路径拼接、隔离文件系统；禁止 Agent 输入 \`../\` 或不受检验的绝对路径影响文件定位；业务 API 必须同样按项目权限验证。
 - 不能仅凭设置 \`cwd\` 宣称强隔离；实现时必须以跨项目文件/API 禁读测试验收。
 
-## 7. 目录方案 A 已正式确认；SQLite 作用域单独确认
+## 7. 目录和 SQLite 作用域均已确认
 
-用户已确认：项目级 `creative-pool/` 和 `assets/`、`media/`；分集 `episodes/{episode_id}/`；分集下 A3–B4 的六个 `stages/`；阶段产物具有各自草稿和不可覆盖的定稿版本。见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)。
+- **项目目录方案 A**：`creative-pool/`、`assets/`、`media/` 与 `episodes/{episode_id}/stages/`，阶段内按产物的草稿和不可覆盖定稿版本组织；见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)。
+- **SQLite 方案 A**：所有项目共用系统级 SQLite，推荐逻辑位置 `app/cinepilot.sqlite`，只由 Python 统一业务服务访问，不放到 Agent 可访问范围；见 [ADR-0019](../adr/0019-single-system-sqlite-with-project-content-files.md)。
+- **查询原则**：SQLite 索引负责找到项目/分集/阶段/产物/定稿版本及其文件位置；Python 按需读取对应 Markdown/JSON/图片原文。后续如果需要跨大量文档搜索，可添加 SQLite 全文检索索引，但原始文件仍为相应正文/结构的权威。
+- **项目搬迁提醒**：复制项目文件夹能取得内容与媒体，但不能独立恢复集中 SQLite 中的审批与版本记录；必须提供项目级导出/导入，把该项目相关的关系和版本元数据一起封装。
 
-**尚未确认**：前图将 SQLite 放在 `app/cinepilot.sqlite`，代表推荐的系统级单库方案，但**不意味着已排除每个项目独立 `project.sqlite` 的方案**。下一项讨论只需要选择 SQLite 的数据库作用域：系统一个库，还是每项目一个库。详见 [SQLite 作用域与项目迁移](../discovery/0016-sqlite-scope-and-project-portability.md)。
-
-无论数据库位置，Agent 的工作目录是项目目录的**隔离执行视图**，不授权它直接修改项目数据库或其他项目。业务服务仍是所有产物定稿、审批、版本关系与查询的唯一入口。
+具体字段 Schema、ID 命名、按需内容片段粒度、性能缓存和常规数据完整性属于后续实现设计。Agent 的操作系统级沙箱仍只暴露本项目工作视图与获准的只读 Skill，不能因全局数据库存在而拥有其他项目访问权。
