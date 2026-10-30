@@ -26,4 +26,6 @@
 
 **第七轮已确认**：UI 与 Agent 均不得覆盖已定稿产物；修改先产生新草稿，用户确认后才形成新的定稿，旧版本和已存在的下游产物都保留。见 `docs/adr/0007-approved-artifact-revision-policy.md`。
 
-**当前单个待讨论问题**：上游新定稿出现后，下游如何依据引用关系标记待复核、由谁触发修改，见 `docs/discovery/0007-upstream-change-impact-policy.md`。
+**第八轮已确认**：上游产生新定稿后，系统依据版本依赖标记相关下游待复核，不自动重做；用户决定继续沿用或交给 Agent 修订。见 `docs/adr/0008-review-dependent-artifacts-without-auto-regeneration.md`。
+
+**当前单个待讨论问题**：同一分集在上游未定稿时能否正式启动下游阶段，见 `docs/discovery/0008-stage-gate-and-handoff.md`。
