@@ -1,6 +1,6 @@
 # CinePilot Studio — Python 服务接口与 Vue/Electron 创作工作台设计
 
-> 版本：0.2（Agent 创作工作台/API 草案；完整管理后台页面清单见独立规格）
+> 版本：0.3（补齐 Agent/Model 与 Skill 编排服务边界；完整后台页面见独立规格）
 > 日期：2026-10-30
 > 状态：**已经确认的产品边界**与**候选 UI/API 细节**分别记录。此文档不代表最终 OpenAPI 或 Vue 组件实现。
 > 关联：[整体产品流程](./overall-product-workflow-and-system-map.md) · [核心数据模型](./core-data-model-and-storage-contracts.md) · [项目目录规范](./project-workspace-directory-layout.md) · [Agent/Skill](./agent-skill-orchestration-and-runtime.md) · [项目隔离](./project-isolated-agent-workspaces-and-skills.md) · [阶段合同](./stage-contracts-and-artifact-map.md) · [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md)
@@ -71,7 +71,7 @@ B4 定稿并导出：镜头、角色/场景引用、提示词和生产准备文�
 
 ## 3. Vue / Electron 信息架构
 
-> **范围说明**：本文件重点描述 Agent 创作工作台的任务闭环、Python 业务模块和 API 候选。此前 3.1 的 App 层级只是早期导航草案，不能视为完整的后台页面设计。完整的项目管理后台、创意池、分集管理、产物库、资产库、审查中心、Agent 任务中心、系统设置，以及它们与创作工作台的关系，统一以 [产品信息架构与页面功能规格](./product-information-architecture-and-page-functions.md) 为准。视觉样式/UIUX 不在上述规格范围内。
+> **范围说明**：本文件重点描述 Agent 创作工作台的任务闭环、Python 业务模块和 API 候选。Agent 接入/模型配置和 Skill Registry/阶段编排的完整业务规则分别见 [Agent 接入与模型管理](./agent-integration-and-model-management.md) 与 [Skill Registry 与阶段编排](./stage-skill-orchestration-and-registry.md)。此前 3.1 的 App 层级只是早期导航草案，不能视为完整的后台页面设计。完整的项目管理后台、创意池、分集管理、产物库、资产库、审查中心、Agent 任务中心、系统设置，以及它们与创作工作台的关系，统一以 [产品信息架构与页面功能规格](./product-information-architecture-and-page-functions.md) 为准。视觉样式/UIUX 不在上述规格范围内。
 
 ### 3.1 推荐应用层级
 
@@ -168,9 +168,14 @@ App Shell
 | StoryStructureService | Scene/Segment/Subsegment/Shot 精确查询与结构校验 | ID + Revision ID；JSON 结构权威 |
 | AssetService | 项目基础资产、分集变体、使用清单 | 禁止直接改写其他分集或跨项目引用 |
 | MediaService | 文件上传、缩略图、视图用途、按媒体 ID 读取 | 服务端验证项目归属 |
-| AgentTaskService | 创建任务、选择 Skill、Handoff、运行状态、取消 | 绑定 Run 的 project_id/episode/stage |
+| AgentRegistryService / AgentConnectionService | Runtime 注册、安装/认证检测、Connection Profile | 不保存明文凭据 |
+| AgentCapabilityService / ModelDiscovery | 动态发现 Runtime 能力、模型目录和参数 Schema | 不硬编码跨 Agent 模型列表 |
+| AgentModelProfileService / ExecutionProfileResolver | Agent+Model Profile 与系统/项目/阶段/任务配置解析 | 不混入 Skill 配置 |
+| AgentTaskService / AgentRunSnapshotService | 创建任务、Handoff、Run 状态和不可变执行快照 | 绑定 Run 的 project_id/episode/stage |
 | AgentRuntimeAdapter | 控制一个 CLI 或官方 Agent SDK、转事件与工具调用 | 不直接写数据库/修改定稿 |
-| SkillService | 系统 Skill 列表、项目启用版本、只读投射 | Skill 脚本也在当前项目沙箱内 |
+| SkillRegistryService / StageSkillProfileService | 系统 Skill 来源/版本、项目 A1–B4 Profile、分集覆盖 | 不把系统登记等同于项目启用 |
+| SkillRouter / SkillPlanService | 按任务、阶段、题材和兼容性生成 Skill Plan | 不绕过阶段门禁或 License/安全检查 |
+| SkillProjectionAdapter | 将当前 Run 所需 Skill 只读投射到项目隔离工作区 | 不暴露全局 Skill 源目录 |
 | ExportService | 影视生成准备包导出，项目级备份/迁移 | 项目导出要附 SQLite 元数据 |
 | EventGateway | 前端订阅 Run 和产物变化事件 | SSE / WebSocket 方案后续落技术规范 |
 
@@ -247,6 +252,25 @@ Python 服务**可以是一个进程和模块集合**；不需要一开始部署
 内部 Agent 工具建议不暴露可自由指定 project_id 的跨项目 API；系统从不可变 Run 的授权上下文自动绑定，并验证产物和媒体均属于当前项目。
 
 ---
+
+### 5.5 Agent / Model / Skill 配置
+
+| 方法 | 路由草案 | 功能 |
+|---|---|---|
+| GET | /system/agent-runtimes | 系统 Runtime Registry |
+| POST | /system/agent-connections/detect | 检测本机 Agent |
+| POST | /system/agent-connections/{id}/test | 连接、能力和隔离测试 |
+| GET | /system/agent-connections/{id}/capabilities | Adapter 能力声明 |
+| POST | /system/agent-connections/{id}/discover-models | 动态发现模型 |
+| GET/POST/PATCH | /system/agent-model-profiles | Agent + Model Profile |
+| GET/PUT | /projects/{project_id}/stage-agent-routes | 项目 A1–B4 阶段 Agent/Model 路由 |
+| GET | /system/skills | 系统 Skill Registry |
+| GET/PUT | /projects/{project_id}/stage-skill-profiles | 项目八阶段 Skill 配置 |
+| GET/PUT | /projects/{project_id}/episodes/{episode_id}/stage-skill-overrides | 分集阶段 Skill 覆盖 |
+| POST | /projects/{project_id}/agent-runs/preview | 预览 Agent/Model/Skill Plan |
+| GET | /projects/{project_id}/agent-runs/{run_id}/execution-snapshot | 查看实际执行配置快照 |
+
+模型目录与参数由 Agent Adapter 动态提供；Skill Router 生成的 Skill Plan 与 Agent Model Profile 分开解析，Run 启动后一起写入快照。
 
 ## 6. 一次任务的实时状态与 UI 反馈（推荐）
 
@@ -410,9 +434,8 @@ Python 服务**可以是一个进程和模块集合**；不需要一开始部署
 
 这些会影响具体发布形态与 V1 价值，可以在技术架构与验收阶段集中讨论。**不为普通异常、重试策略、细节 API 命名逐项 Grill**。
 
-## 14. 当前建议的下一设计交付
+## 14. 开发衔接
 
-- 给各页面制作低保真线框和主要交互状态；
-- 将本文件 API 草案细化为按阶段可执行的 OpenAPI 合同与 Artifact JSON Schema；
-- 编写 V1 里程碑和验收脚本清单（先验证单运行时 Agent 沙箱与草稿-定稿闭环）；
-- 由用户集中评审主工作台形态、首个运行时和 Electron 部署边界，随后才能进入正式开发实现。
+本文件的 API 仍是逻辑路由候选，实施时按统一业务服务和阶段合同细化 OpenAPI/Schema。Agent/Model 和 Skill 配置合同以对应专项规格为准。
+
+**可以开始 V1 开发**：建议先执行 [开发启动与实施路线图](./development-kickoff-and-implementation-roadmap.md) 的 M0 技术 Spike，再实现 Project/Workspace、Artifact/Revision/StageApproval、Agent Adapter、Skill Registry 和第一条 A1/A2 创作垂直切片。视觉样式和高保真 UIUX 不构成开工前置。
