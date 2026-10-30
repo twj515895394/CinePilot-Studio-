@@ -1,7 +1,7 @@
 # SQLite 放在哪里：全局索引数据库 vs 每项目独立数据库
 
 > 日期：2026-10-30
-> 状态：**两种 SQLite 作用域尚未由用户确认**；项目/分集产物目录方案 A 已确认，参见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)
+> 状态：**已确认 A：全系统共用一个 SQLite**；项目/分集产物目录方案 A 也已确认，参见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md) 与 [ADR-0019](../adr/0019-single-system-sqlite-with-project-content-files.md)
 > 依据：[项目目录规范](../spec/project-workspace-directory-layout.md)、[字段权威 ADR-0012](../adr/0012-field-owned-markdown-json-sqlite.md)、[项目 Agent 隔离 ADR-0017](../adr/0017-project-isolated-agent-workspaces-and-skill-projection.md)
 
 ## 问题由来
@@ -81,4 +81,14 @@ cinepilot-data/
 - **A（推荐）**：一个系统级 SQLite，项目 MD/JSON/图片各自独立存放；系统后续做项目级导出/导入。
 - **B**：每项目一个 SQLite，另有轻量项目注册表，项目尽量自包含、易单独搬迁。
 
-确认后再将 SQLite 物理位置写为正式 ADR；字段表结构、索引和通用备份过程不逐项 Grill。
+## 本轮正式结论（2026-10-30）
+
+**用户明确确认 A：全系统共用一个 SQLite 数据库。** 用户认为这也是后台管理系统集中查询项目、分集和创作状态的自然选择。已形成 [ADR-0019](../adr/0019-single-system-sqlite-with-project-content-files.md)。
+
+**用户追问查询速度**：读取文档原文时，SQLite 和文件的速度没有绝对胜者；对于通过已知 ID 定位版本、跨项目/跨分集的列表过滤，带索引的 SQLite 更合适；对于直接读取一个已知 Markdown 文件的全文，文件读取已经很高效；对于跨大量文档搜索文本，可后续使用 SQLite FTS5 构建可重建索引，再按结果 ID 读取原文。**索引和缓存是派生加速层，不能成为一份可独立编辑的创作正文权威**。
+
+**推荐读取链路**：UI/Agent → Python 业务服务 → SQLite 查询对象/权限/版本/文件定位 → 按需读取 Markdown/JSON 或媒体 → 返回当前作用域需要的文档/片段；先实现稳定 ID 定位和字段索引，不为了“数据库读取可能更快”重新复制全部创作正文到 SQLite。
+
+**补充说明**：由于当前选择中心数据库，用户若想将某个项目单独备份或迁移，系统需要导出该项目的内容文件和关联的 SQLite 关系/版本元数据；复制 P001 文件夹本身并不包含全部审批和版本事实。
+
+字段表结构、文件缓存、FTS5 的中文检索方法、索引维护及备份恢复属于开发和性能验收细节，不在此轮追加异常情况 Grill。
