@@ -1,6 +1,6 @@
 # CinePilot Studio 整体产品流程与系统设计总览
 
-> 版本：0.7（新增项目目录规范待确认草案）
+> 版本：0.8（项目目录分层已确认，SQLite 作用域待定）
 > 日期：2026-10-30
 > 状态：用于统一产品全貌与后续设计顺序；标注「已确认」的内容来自用户决策，其余为推荐草案，不自动视为定稿。
 > 依据：[需求基线](../discovery/0001-initial-scope-and-design-tree.md)、[领域词汇表](../../CONTEXT.md)、[ADR-0001 至 ADR-0013](../adr/)
@@ -278,7 +278,7 @@ SQLite 记录定稿状态与上游版本依赖，开放下一阶段
 
 ### 6.2 统一项目目录规范（待确认）
 
-**最新目录方案及版本保存示例**：参见 [项目工作区目录规范 v0.1](./project-workspace-directory-layout.md)。其内容明确区分项目级 `creative-pool/` 与 `assets/`、分集级 `episodes/{episode_id}/stages/` 六个阶段，以及各产物自己的 `drafts/` 与 `revisions/`；比下面这张早期草图更完整。**目录规范仍待用户确认，下面保留的是历史示意，不应与最终开发规范混用。**
+**项目目录分层已确认**：参见 [项目工作区目录规范 v0.2](./project-workspace-directory-layout.md) 和 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)。项目级 `creative-pool/`、`assets/`、`media/`；分集级 `episodes/{episode_id}/stages/` 六个阶段；每个产物区分 `drafts/` 与 `revisions/`。下方是早期示意，**具体文件名和 SQLite 物理作用域仍未确认**，以 v0.2 为准。
 
 #### 原始概念目录示例（供对照，非执行规范）
 
@@ -316,7 +316,7 @@ workspace/
                     └── {artifact-id}/{revision-id}/
 ~~~
 
-当前推荐按项目级创意/资产与分集级阶段/产物/版本组织，但**用户尚未确认最终目录规范**；后续以 [项目工作区目录规范](./project-workspace-directory-layout.md) 审核结果为准。SQLite 是业务状态和关系的权威，不通过文件名或扫描目录推断定稿状态。
+**目录分层已经用户确认**，参见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)。SQLite 是业务状态和关系的权威，不通过文件名或扫描目录推断定稿状态；**系统一库还是项目一库**仍需明确，参见 [SQLite 作用域候选](../discovery/0016-sqlite-scope-and-project-portability.md)。
 
 ### 6.3 按需读取，不先建独立知识库
 
