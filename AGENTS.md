@@ -30,4 +30,6 @@
 
 **第九轮已确认**：同一分集只有上游必要创作阶段定稿后才能正式进入下游阶段，所有正式 Handoff 需明确上游定稿版本；不同分集可独立推进或批量推进。点子与创意方向在分集建立之前管理，不得误套分集内部阶段门禁。见 `docs/adr/0009-approved-upstream-stage-gates.md`。
 
-**当前单个待讨论问题**：下一阶段 Agent 的正式交接应采用完整对话、精简版本明确的 Handoff 还是仅上一阶段文档，见 `docs/discovery/0009-agent-handoff-payload.md`。
+**第十轮已确认**：正式 Handoff 精简、版本明确、按需展开，包含项目/分集、上游定稿版本、已确认约束与任务/产物要求；不默认加载完整聊天或全部文档。见 `docs/adr/0010-compact-versioned-agent-handoff.md`。用户提出数据库/知识库保存大内容并按需检索，但具体检索架构尚未定稿，尤其不能直接把独立知识库当成已批准需求。
+
+**当前单个待讨论问题**：启动 Agent 前应系统预先准备必需事实，还是交给 Agent 全部自主查询，见 `docs/discovery/0010-controlled-on-demand-retrieval.md`。
