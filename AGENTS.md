@@ -36,4 +36,6 @@
 
 **明确的管理后台需求**：已保存/定稿的创意、剧本、导演、分镜、提示词需要在 UI 中按项目、分集、阶段和版本读取、浏览与管理；分集建立前的项目创意池也必须可见。SQLite + Markdown/JSON 的确切事实来源分工尚未确认，不得把推荐技术分工误认为已定稿。
 
-**当前单个待讨论问题**：SQLite、Markdown、JSON 如何划分不可重复的字段权威，使 Web 和 Agent 看到同一版本的产物，见 `docs/discovery/0011-storage-authority-and-admin-ui.md`。
+**第十二轮已确认**：Markdown 管正文、JSON 管结构化产物、SQLite 管关系和版本审批，写入经统一服务。见 ADR-0012。
+
+**当前单个待讨论问题**：文件与 SQLite 的发布一致性，见 `docs/discovery/0012-cross-store-publish-consistency.md`。
