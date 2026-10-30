@@ -28,4 +28,6 @@
 
 **第八轮已确认**：上游产生新定稿后，系统依据版本依赖标记相关下游待复核，不自动重做；用户决定继续沿用或交给 Agent 修订。见 `docs/adr/0008-review-dependent-artifacts-without-auto-regeneration.md`。
 
-**当前单个待讨论问题**：同一分集在上游未定稿时能否正式启动下游阶段，见 `docs/discovery/0008-stage-gate-and-handoff.md`。
+**第九轮已确认**：同一分集只有上游必要创作阶段定稿后才能正式进入下游阶段，所有正式 Handoff 需明确上游定稿版本；不同分集可独立推进或批量推进。点子与创意方向在分集建立之前管理，不得误套分集内部阶段门禁。见 `docs/adr/0009-approved-upstream-stage-gates.md`。
+
+**当前单个待讨论问题**：下一阶段 Agent 的正式交接应采用完整对话、精简版本明确的 Handoff 还是仅上一阶段文档，见 `docs/discovery/0009-agent-handoff-payload.md`。
