@@ -475,11 +475,16 @@ Prompt 关联 Shot ID 与明确的 B3 批准版本；在 B3 镜头改版后，�
 
 ---
 
-## 10. 仍需产品层确认的关键边界（不针对普通异常单独 Grill）
+## 10. 实施阶段需要验证的细节
 
-- A1/A2 Idea 与 Concept 的**保存历史/选中快照**需达到哪种回溯程度？可以有独立内容版本，但不应强制复用分集阶段的全部审批规则。
-- **已确认审批粒度**：正式按阶段整体定稿；B3 单镜头可以局部编辑、独立发起 Agent 改写任务，但不拥有独立的正式审批工作流。见 [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md)。镜头物理 JSON 拆分与草稿自动保存策略留待实施规格。
-- 项目媒体引用与镜头多视图的具体编辑和绑定体验，是否必须在 V1 就提供图片上传与参考图预览？已有资产复用/变体原则，UI 细节仍需设计。
-- 对话与 Agent 执行日志是否要长久保存全文及可否导出，涉及存储体积和用户使用体验。
+核心领域关系、字段权威分工、阶段审批粒度、Agent/Model/Skill 配置实体已经形成开发基线。以下是实施前需通过原型/测试验证的细节，不是继续进行产品层 Grill 的前置问题：
 
-**已完成下一步整体方案**：Python 统一业务服务模块、Vue/Electron 页面与端到端交互、阶段审查及 Agent 任务 API 候选已整理在 [Python 服务接口与工作台设计](./python-api-and-vue-electron-workbench.md)。后续应集中设计 V1 部署/运行时/沙箱可行性和 UI 原型，不再重复询问已确认的阶段审批粒度。
+- A1/A2 Idea 与 Concept 的保存历史和选中快照如何复用 Revision 机制，但不套用分集阶段 StageApproval。
+- 镜头物理 JSON 的组织、草稿自动保存和局部对象差异计算。
+- 项目媒体引用与镜头多视图的具体编辑体验。
+- 对话与 Agent 运行事件的保留周期、全文导出和敏感信息过滤。
+- Agent Model Catalog 的动态发现缓存、Stage Skill Profile 的 JSON/关系表拆分与索引策略。
+
+**已确认审批粒度**：正式按阶段整体定稿；B3 单镜头可以局部编辑、独立发起 Agent 改写任务，但不拥有独立的正式审批工作流。见 [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md)。
+
+相关实施顺序见 [开发启动与实施路线图](./development-kickoff-and-implementation-roadmap.md)。数据库迁移、约束和索引需由 Codex 根据实际查询与测试细化，不能把本文示例直接当作最终 DDL。
