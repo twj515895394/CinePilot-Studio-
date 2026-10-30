@@ -1,9 +1,9 @@
 # CinePilot Studio 整体产品流程与系统设计总览
 
-> 版本：1.0（新增统一数据模型与存储合同草案）
+> 版本：1.1（阶段整体定稿已确认，新增 Python API 与工作台主流程）
 > 日期：2026-10-30
 > 状态：用于统一产品全貌与后续设计顺序；标注「已确认」的内容来自用户决策，其余为推荐草案，不自动视为定稿。
-> 依据：[需求基线](../discovery/0001-initial-scope-and-design-tree.md)、[领域词汇表](../../CONTEXT.md)、[ADR-0001 至 ADR-0013](../adr/)
+> 依据：[需求基线](../discovery/0001-initial-scope-and-design-tree.md)、[领域词汇表](../../CONTEXT.md)、[ADR-0001 至 ADR-0020](../adr/)
 
 ## 1. 产品定位
 
@@ -326,7 +326,11 @@ workspace/
 
 ---
 
+**阶段审批粒度（已确认）**：一个正式阶段作为用户定稿与 Handoff 单位，场次、片段、镜头支持局部编辑和 Agent 定点修改，但不要求独立逐镜头审批，见 [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md)。
+
 ## 7. Web 管理后台信息架构
+
+**界面 + Python API 的详细设计草案**：[Python 业务接口与 Vue/Electron 创作工作台](./python-api-and-vue-electron-workbench.md)。涵盖页面导航、项目创建与 Skill 启用、项目创意池与立项、A3–B4 三栏工作台、Run 实时任务流、局部编辑、阶段整体定稿、版本审查、受控资产媒体与 API 候选。详细 HTTP 路由及技术实现仍待确认。
 
 ### 7.1 顶层导航建议
 
