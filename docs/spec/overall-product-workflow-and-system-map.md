@@ -1,6 +1,6 @@
 # CinePilot Studio 整体产品流程与系统设计总览
 
-> 版本：1.2（明确管理后台与 Agent 创作工作台双区域，补充完整页面功能规格）
+> 版本：1.3（补齐 Agent/Model 管理、Skill Registry 与 A1–B4 阶段 Skill 编排）
 > 日期：2026-10-30
 > 状态：用于统一产品全貌与后续设计顺序；标注「已确认」的内容来自用户决策，其余为推荐草案，不自动视为定稿。
 > 依据：[需求基线](../discovery/0001-initial-scope-and-design-tree.md)、[领域词汇表](../../CONTEXT.md)、[ADR-0001 至 ADR-0020](../adr/)
@@ -205,7 +205,9 @@ EP-001
 
 **关键建议：** Skill Router 可以由一个入口 Skill 辅助，但阶段权限、定稿门禁、版本和数据写入必须由系统代码控制，不能只依赖 Prompt 约定。
 
-### 5.2 Skill 组合建议
+### 5.2 Skill 能力角色与外部候选
+
+以下是能力角色分类，不代表已安装或已选定具体 Skill；真实候选和阶段绑定以 [Skill Registry 与阶段编排规格](./stage-skill-orchestration-and-registry.md) 为准。
 
 **创意编剧 Skill 组**
 
@@ -223,7 +225,7 @@ EP-001
 - Storyboard & Shot Designer：镜头语言、镜头表、分镜图/关键帧描述。
 - Video Prompt Engineer：将镜头和资产约束转换为视频模型提示词。
 
-以上是职责拆分，不意味着 V1 必须安装十几个独立 Skill。可以先用少量高质量 Skill 覆盖多个紧密相关任务，再根据实际质量与维护成本拆分。
+以上是职责拆分，不意味着 V1 必须安装十几个独立 Skill。可以先用少量高质量 Skill 覆盖多个紧密相关任务，再根据实际质量与维护成本拆分。外部候选未完成 License、质量、Runtime 兼容和阶段合同评估前，不得标记为已启用。
 
 ### 5.3 推荐的 Agent 创作闭环
 
@@ -264,6 +266,29 @@ SQLite 记录定稿状态与上游版本依赖，开放下一阶段
 
 ---
 
+### 5.5 Agent 接入、模型配置与阶段 Skill 编排
+
+Agent、Model 和 Skill 是三套独立配置：
+
+- **Agent Runtime**：负责实际执行任务；V1 CLI 生态优先，官方 Agent SDK 可用时优先评估。
+- **Model**：从所选 Runtime Adapter 动态发现；模型 ID、推理等级和参数不做跨 Agent 硬编码。支持什么就展示什么，不支持则使用 Runtime 默认模型。
+- **Skill**：负责专业创作方法；系统级 Registry 管理来源/版本/License，项目按 A1–B4 配置 Stage Skill Profile。
+
+配置解析：
+- Agent/Model：任务覆盖 → 分集阶段覆盖 → 项目阶段配置 → 项目默认 → 系统默认；
+- Skill：任务 Skill Override → 分集阶段 Skill Override → 项目 Stage Skill Profile → 系统阶段模板。
+
+每个阶段可配置主 Skill、辅助 Skill、条件/题材插件和 Review Skill；一个 Skill 可跨阶段复用，一个阶段可组合多个 Skill。Python Skill Router 在 Run 启动前生成可解释 Skill Plan，按需加载 references，避免每次把所有 Skill 放进上下文。
+
+**第一批八个候选来源**：Story Idea Generator、Short Film Development、Comedy Short Video Skill、Stephen Chow Skill、Creative Director、AI ShortVideo Story Engine、Wind Comic Screenwriter、Storytelling Frameworks。它们的仓库、Skill 路径、License 核验、Commit SHA 和阶段候选映射见 [Skill Registry 与阶段编排规格](./stage-skill-orchestration-and-registry.md)。B1/B2/B4 缺失 Skill 由用户后续补充；不虚构占位外部 Skill。
+
+详细规格：
+- [Agent 接入与模型管理](./agent-integration-and-model-management.md)
+- [Skill Registry 与阶段 Skill 编排](./stage-skill-orchestration-and-registry.md)
+- [Agent/Skill 运行时协同](./agent-skill-orchestration-and-runtime.md)
+
+---
+ 
 ## 6. 持久化与素材组织
 
 ### 6.1 已确认的唯一权威分工
@@ -411,17 +436,20 @@ workspace/
 
 ---
 
-## 10. 后续整体设计工作顺序
+## 10. 从设计基线进入开发
 
-为避免继续陷入大量边缘场景，本项目后续采用「先完整设计主流程，再补工程细节」：
+整体产品流程、阶段/数据模型、后台与创作工作台、Agent/Model 管理、Skill Registry 和运行时协同已经形成可供 V1 开工的设计基线。后续不再为一般工程异常反复 Grill；未锁定的技术细节由 Codex 在实现前根据目标平台验证，并通过 Discovery 记录变更理由。
 
-1. **阶段合同与产物清单**：逐阶段明确输入、输出、必需/可选产物、用户确认点、下游使用方式。
-2. **素材资产模型**：角色、场景、服装、道具、风格、参考素材的项目/分集/片段/镜头关系。
-3. **Agent 与 Skill 架构**：Router 职责、专业 Skill 组合、会话与任务、统一读写工具、Handoff。
-4. **内容与数据模型**：稳定 ID、Markdown/JSON Schema、SQLite 实体关系、版本与依赖。
-5. **管理后台交互设计**：项目页、创意池、分集工作台、各阶段编辑器、版本审查、批量准备。
-6. **技术架构与 V1 验收**：前后端、Agent 运行方式、部署形态、权限、测试和验收标准。
-7. **开发拆解**：形成 spec、任务里程碑和可执行开发计划。
+开发按可运行垂直闭环推进，而不是先做完所有页面：
+1. 项目/工作区/SQLite 与项目隔离；
+2. Idea/Concept 与 Episode 生命周期；
+3. Artifact 草稿、不可变 Revision、阶段整体审批；
+4. Agent Adapter、模型配置、Run 快照与安全隔离；
+5. Skill Registry、八阶段 Profile、Skill Plan 与按需投射；
+6. 一个阶段端到端创作闭环，再扩展 A1–B4 专业编辑器；
+7. 资产/媒体、版本依赖、批量任务和 B4 导出。
+
+详细任务、里程碑和验收见 [开发启动与实施路线图](./development-kickoff-and-implementation-roadmap.md)。
 
 ### 讨论方式
 
@@ -432,11 +460,14 @@ workspace/
 
 ---
 
-## 11. 当前最重要的待确认内容
+## 11. 开发前仍需验证的实现事项
 
-1. **已确认**：B2 为独立制作拆解关卡，角色/场景资产管理贯穿 A3–B4；参见 [ADR-0014](../adr/0014-production-breakdown-with-cross-stage-assets.md)。
-2. 各阶段的详细必需产物和定稿标准。
-3. **已确认**：项目基础资产可在同项目多集间复用；分集可显式建立自己的造型/服装/状态变体；建议图片引用使用资产/变体/媒体 ID，而不是手工填写文件路径。见 [ADR-0015](../adr/0015-project-assets-with-episode-variants.md) 与 [创作资产模型](./creative-asset-model-and-use.md)。
-4. 分镜图/关键帧在 V1 是必须支持上传/管理，还是先以结构化镜头表和文字提示词为主。
+以下事项不阻止开始搭建基础工程，但在对应里程碑进入实施前必须通过原型/测试验证：
 
-除上述产品设计问题外，存储异常和一般健壮性不再逐项 Grill，作为工程实现时的默认要求。
+1. 首个 Agent Runtime、官方 SDK/CLI 控制能力和本机隔离方案；凭据不能暴露给 Agent 子进程。
+2. Windows/macOS/Electron 下项目沙箱的真实文件系统隔离能力；cwd 不构成安全边界。
+3. Runtime 动态模型发现和参数选择能力；不支持时使用 Runtime 默认模型。
+4. 八个外部 Skill 的深度质量评测、License 范围审查和 CinePilot 输出适配；B1/B2/B4 Skill 来源由用户后续补充。
+5. 分镜图片 V1 先支持用户上传/预览/引用；实际图像/视频生成 API 不在本期范围。
+
+这些是实现验证任务，不是继续拆成大量用户选择题的理由。涉及产品边界变化时再记录 Discovery/ADR。
