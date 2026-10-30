@@ -22,6 +22,8 @@
 
 Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行/打包方式尚未定稿，不得在未经确认时将推荐方案写成已批准选型。
 
+**Agent 运行与隔离（已确认）**：项目创建即拥有独立工作区，任务以该项目目录作为工作目录；系统集中维护 Skills，按项目选择并只读链接/投射；Agent 禁止访问其他项目目录。V1 以本地 CLI 体系为先，官方 Agent SDK 可用时优先用于程序控制。**cwd 本身不构成隔离**，必须由真实执行环境和业务工具边界保证。
+
 ## 设计讨论入口
 
 - [需求基线与架构讨论树（第一、二轮定稿）](docs/discovery/0001-initial-scope-and-design-tree.md)
@@ -40,7 +42,8 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [八阶段输入输出、产物及正式交接设计（B2 已确认）](docs/spec/stage-contracts-and-artifact-map.md)
 - [创作资产体系：项目基础资产 + 分集变体（方案 B 已确认）](docs/spec/creative-asset-model-and-use.md)
 - [Agent / Skill 协作与运行架构（详细草案）](docs/spec/agent-skill-orchestration-and-runtime.md)
-- [Agent 首期运行时路线：CLI 优先或 SDK/API（待确认）](docs/discovery/0015-agent-runtime-priority.md)
+- [Agent V1 运行路线：CLI 生态优先、官方 Agent SDK 可用时优先评估（已确认）](docs/discovery/0015-agent-runtime-priority.md)
+- [项目隔离 Agent 工作区与 Skill 只读投射（设计草案）](docs/spec/project-isolated-agent-workspaces-and-skills.md)
 - [项目基础资产与分集变体确认记录](docs/discovery/0014-project-asset-episode-variants.md)
 - [B2 与横向资产管理的确认记录](docs/discovery/0013-production-breakdown-and-asset-lifecycle.md)
 - [领域词汇表：CONTEXT.md](CONTEXT.md)
@@ -59,6 +62,8 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [ADR-0013：先写入不可变版本文件，再发布 SQLite 引用](docs/adr/0013-file-first-version-publication.md)
 - [ADR-0014：B2 制作拆解独立，创作资产横向贯穿多个阶段](docs/adr/0014-production-breakdown-with-cross-stage-assets.md)
 - [ADR-0015：项目基础资产可复用，分集可建立独立变体](docs/adr/0015-project-assets-with-episode-variants.md)
+- [ADR-0016：CLI 生态优先，可通过官方 Agent SDK 控制](docs/adr/0016-cli-first-with-official-agent-sdk.md)
+- [ADR-0017：项目独立 Agent 工作区、Skill 按项目投射，禁止访问其他项目](docs/adr/0017-project-isolated-agent-workspaces-and-skill-projection.md)
 - [grill-with-docs 规范](docs/process/grill-with-docs/SKILL.md)
 - [CONTEXT.md 术语格式](docs/process/grill-with-docs/CONTEXT-FORMAT.md)
 - [ADR 决策记录格式](docs/process/grill-with-docs/ADR-FORMAT.md)
