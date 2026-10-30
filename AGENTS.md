@@ -43,4 +43,6 @@
 
 **已确认技术栈**：Web 前端 Vue，业务后端 Python，桌面端 Electron（复用 Vue 工作台）；持久化 Markdown + JSON + SQLite。具体 Vue 状态管理、Python HTTP 框架、Electron 与 Python 的启动/进程通信、桌面安装包形式均未定稿，不得擅自固定为特定实现。
 
-**当前设计重点**：先确定完整产品流程、阶段合同、核心产物、素材资产模型、Agent/Skill 协作、管理后台和 V1 范围。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同草案见 `docs/spec/stage-contracts-and-artifact-map.md`。常规异常处理不再单独 Grill。
+**已确认的 B2 与资产管理边界**：B2 是正式且独立的「制作拆解」阶段，负责剧本场次→导演片段/可选子片段规划及本集资产需求核对；角色、场景、服装、道具等资产贯穿 A3–B4 管理，不能限定到 B2 才能创建。见 `docs/adr/0014-production-breakdown-with-cross-stage-assets.md`。
+
+**当前设计重点**：继续完成整体产品流程、阶段合同与核心产物、素材资产使用关系、Agent/Skill 协作、后台和 V1 范围。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同见 `docs/spec/stage-contracts-and-artifact-map.md`；资产模型草案见 `docs/spec/creative-asset-model-and-use.md`。**项目内多分集的资产复用与变体尚未定稿**；常规异常处理不单独 Grill。
