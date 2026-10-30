@@ -308,7 +308,7 @@ B4 提示词：
 - 连续性约束；
 - 全集提示词包导出。
 
-B1/B2/B4 的外部 Skill 来源等待用户后续补充；不阻止先搭建空 Profile、编辑器和阶段合同。
+A4 通用 Screenwriter 与 B3 通用 Shot Designer 仍是能力缺口，Wind Comic / AI ShortVideo 仅作为待评估候选；B1/B2/B4 的外部 Skill 来源等待用户后续补充。不阻止先搭建空 Profile、编辑器和阶段合同。
 
 ### M9 — 资产、审查、批量与导出完善
 
