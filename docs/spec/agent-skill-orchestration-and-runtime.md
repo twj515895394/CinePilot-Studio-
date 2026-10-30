@@ -3,7 +3,7 @@
 > 版本：0.3（补齐 Agent/Model Profile、Stage Skill Profile、Skill Router 与 Run 快照合同）
 > 日期：2026-10-30
 > 状态：**V1 CLI 生态优先、可优先通过官方 Agent SDK 控制，以及项目工作区强隔离均已确认**；首个具体 Agent/SDK 和执行沙箱实现未确认
- > 依据：[Agent 接入与模型管理](./agent-integration-and-model-management.md)、[Skill Registry 与阶段编排](./stage-skill-orchestration-and-registry.md)、[整体设计总览](./overall-product-workflow-and-system-map.md)、[八阶段合同](./stage-contracts-and-artifact-map.md)、[资产模型](./creative-asset-model-and-use.md)、[ADR-0007/0008/0009](../adr/)、[ADR-0010](../adr/0010-compact-versioned-agent-handoff.md)、[ADR-0011](../adr/0011-mandatory-handoff-context-controlled-retrieval.md)、[ADR-0012](../adr/0012-field-owned-markdown-json-sqlite.md)、[ADR-0015](../adr/0015-project-assets-with-episode-variants.md)
+> 依据：[Agent 接入与模型管理](./agent-integration-and-model-management.md)、[Skill Registry 与阶段编排](./stage-skill-orchestration-and-registry.md)、[整体设计总览](./overall-product-workflow-and-system-map.md)、[八阶段合同](./stage-contracts-and-artifact-map.md)、[资产模型](./creative-asset-model-and-use.md)、[ADR-0007/0008/0009](../adr/)、[ADR-0010](../adr/0010-compact-versioned-agent-handoff.md)、[ADR-0011](../adr/0011-mandatory-handoff-context-controlled-retrieval.md)、[ADR-0012](../adr/0012-field-owned-markdown-json-sqlite.md)、[ADR-0015](../adr/0015-project-assets-with-episode-variants.md)
 
 ---
 
