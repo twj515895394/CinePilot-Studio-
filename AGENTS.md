@@ -32,4 +32,8 @@
 
 **第十轮已确认**：正式 Handoff 精简、版本明确、按需展开，包含项目/分集、上游定稿版本、已确认约束与任务/产物要求；不默认加载完整聊天或全部文档。见 `docs/adr/0010-compact-versioned-agent-handoff.md`。用户提出数据库/知识库保存大内容并按需检索，但具体检索架构尚未定稿，尤其不能直接把独立知识库当成已批准需求。
 
-**当前单个待讨论问题**：启动 Agent 前应系统预先准备必需事实，还是交给 Agent 全部自主查询，见 `docs/discovery/0010-controlled-on-demand-retrieval.md`。
+**第十一轮已确认**：系统预先提供任务目标、当前有效强制约束和准确的上游定稿版本依据；Agent 通过受控接口按需读取详细原文，不靠自主探索发现必需约束，也不整包加载全部资料。见 `docs/adr/0011-mandatory-handoff-context-controlled-retrieval.md`。
+
+**明确的管理后台需求**：已保存/定稿的创意、剧本、导演、分镜、提示词需要在 UI 中按项目、分集、阶段和版本读取、浏览与管理；分集建立前的项目创意池也必须可见。SQLite + Markdown/JSON 的确切事实来源分工尚未确认，不得把推荐技术分工误认为已定稿。
+
+**当前单个待讨论问题**：SQLite、Markdown、JSON 如何划分不可重复的字段权威，使 Web 和 Agent 看到同一版本的产物，见 `docs/discovery/0011-storage-authority-and-admin-ui.md`。
