@@ -23,7 +23,9 @@ CinePilot Studio 是一个将创意编剧与影视制作规划纳入同一项目
 - **技术栈（已确认）**：Vue 前端 + Python 后端，且必须支持 Electron 桌面端；Web 与 Electron 尽可能复用前端工作台，通过统一业务服务连接存储和 Agent。
 - **Agent 运行路线（已确认）**：V1 优先 CLI 运行时生态，官方 Agent SDK 可用时优先用于 Python 控制，直接模型 API 后续扩展；参见 [ADR-0016](../adr/0016-cli-first-with-official-agent-sdk.md)。
 - **Agent 项目隔离（已确认）**：创建项目时建立独立 Agent 工作区、任务以该目录为 cwd，Skill 从系统目录按项目启用并只读链接/投射；必须从执行环境与受控查询层禁止访问其他项目目录和数据，不能仅依赖 cwd 或 Prompt；参见 [ADR-0017](../adr/0017-project-isolated-agent-workspaces-and-skill-projection.md)。
-- **阶段设计**：完整八阶段输入、输出、审查和交接的首版方案已整理在 [阶段合同与产物映射](../spec/stage-contracts-and-artifact-map.md)，其中 B2 制作拆解与资产管理的正式关系仍为候选方案。
+- **阶段设计**：八阶段输入、输出、审查和交接的初版方案见 [阶段合同与产物映射](../spec/stage-contracts-and-artifact-map.md)；B2 独立、资产管理横向贯穿流程已确认。
+- **目录结构（已确认）**：新建项目即创建独立目录，项目级创意池、资产和媒体；分集下 A3–B4 阶段目录；阶段内独立产物草稿和不可覆盖定稿版本。见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)。
+- **SQLite 作用域待选择**：全系统一个关系/状态 SQLite，或每项目独立 SQLite（另需项目注册表）；参见 [SQLite 作用域讨论](./0016-sqlite-scope-and-project-portability.md)。
 
 ## 2. 待验证的整体形状（不是最终决定）
 
