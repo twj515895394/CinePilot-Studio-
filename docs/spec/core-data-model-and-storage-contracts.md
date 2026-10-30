@@ -1,8 +1,8 @@
 # CinePilot Studio — 领域数据模型、SQLite 索引与 Markdown/JSON 映射
 
-> 版本：0.1（可指导后端接口设计的候选数据合同）
+> 版本：0.2（核心领域关系与阶段审批粒度获确认，字段示例仍为草案）
 > 日期：2026-10-30
-> 状态：**已有 ADR 约束是已确认的产品事实；本文件的表名、字段、SQL、Schema 示例为推荐设计，尚非最终迁移脚本。** 不新增未经用户批准的核心领域关系。
+> 状态：**用户已确认核心实体/关系映射作为后续设计基线，并确认阶段整体定稿、局部场次/片段/镜头可编辑**；本文件的表名、SQL 字段和 JSON Schema 示例仍是推荐设计，尚非最终迁移脚本。见 [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md) 与 [确认记录](../discovery/0017-core-data-approval-and-ui-api-main-flow.md)。
 > 依赖：[项目目录规范](./project-workspace-directory-layout.md)、[八阶段合同](./stage-contracts-and-artifact-map.md)、[资产模型](./creative-asset-model-and-use.md)、[Agent/Skill 架构](./agent-skill-orchestration-and-runtime.md)、[ADR-0001~0019](../adr/)
 
 ## 0. 设计目标与已确认边界
@@ -107,6 +107,8 @@ A1/A2 不创建 Episode 或 StageInstance 的空记录。创意池保存与多�
 | \`stage_approval_items\` | stage_approval_id, artifact_revision_id, required_flag | 本次阶段批准到底包含哪些产物修订 |
 | \`revision_dependencies\` | downstream_revision_id, upstream_revision_id, dependency_type | 版本级来源边，用户可以回溯批准时使用的具体上游 |
 | \`review_flags\` | id, downstream_revision_id, triggering_upstream_revision_id, state, resolved_at | 受上游新定稿影响的提示，不替换、重做或删除旧产物 |
+
+**StageApproval（用户已确认的正式审批粒度）**：正式审批以阶段为单位；Scene、Segment、Shot 允许被单独编辑或指定给 Agent 修改，但局部变更归入该阶段草稿，不要求逐镜头审批。具体 StageApproval 的 SQL 表实现仍是推荐方案。
 
 **为什么需要 StageApproval？** 如果某阶段有多个必需产物（如 \`screenplay.md + scenes.json\`，或故事大纲 + 节拍表），不能仅凭某一个修订已定稿就自动判断“整个阶段通过”。即使首期大多数阶段使用一个逻辑 Artifact，保留“阶段审核这一组产物版本”的概念更清晰；具体是否单独建 \`stage_approvals\` 表由实施时决定，不要求一开始就过度拆表。
 
@@ -432,8 +434,8 @@ Prompt 关联 Shot ID 与明确的 B3 批准版本；在 B3 镜头改版后，�
 ## 10. 仍需产品层确认的关键边界（不针对普通异常单独 Grill）
 
 - A1/A2 Idea 与 Concept 的**保存历史/选中快照**需达到哪种回溯程度？可以有独立内容版本，但不应强制复用分集阶段的全部审批规则。
-- B3 单个镜头是否只作为 ShotPlan JSON 内的结构化对象，还是产品必须支持镜头级独立审批/定稿？现有决策确认了唯一叶级归属与阶段定稿，但未明确每镜头独立审批。
+- **已确认审批粒度**：正式按阶段整体定稿；B3 单镜头可以局部编辑、独立发起 Agent 改写任务，但不拥有独立的正式审批工作流。见 [ADR-0020](../adr/0020-stage-level-approval-with-localized-editing.md)。镜头物理 JSON 拆分与草稿自动保存策略留待实施规格。
 - 项目媒体引用与镜头多视图的具体编辑和绑定体验，是否必须在 V1 就提供图片上传与参考图预览？已有资产复用/变体原则，UI 细节仍需设计。
 - 对话与 Agent 执行日志是否要长久保存全文及可否导出，涉及存储体积和用户使用体验。
 
-**下一项建议**：先把核心实体/关系映射为 Python 服务 API 与 Vue/Electron 管理后台的信息架构和操作闭环，而不是继续围绕普通异常场景逐项提问。若用户要先讨论其中一个可能影响 Schema 的产品边界，应优先讨论「正式审核的最小粒度：阶段整体、产物、还是每个镜头」。
+**已完成下一步整体方案**：Python 统一业务服务模块、Vue/Electron 页面与端到端交互、阶段审查及 Agent 任务 API 候选已整理在 [Python 服务接口与工作台设计](./python-api-and-vue-electron-workbench.md)。后续应集中设计 V1 部署/运行时/沙箱可行性和 UI 原型，不再重复询问已确认的阶段审批粒度。
