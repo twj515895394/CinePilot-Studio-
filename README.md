@@ -24,7 +24,7 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 
 **Agent 运行与隔离（已确认）**：项目创建即拥有独立工作区，任务以该项目目录作为工作目录；系统集中维护 Skills，按项目选择并只读链接/投射；Agent 禁止访问其他项目目录。V1 以本地 CLI 体系为先，官方 Agent SDK 可用时优先用于程序控制。**cwd 本身不构成隔离**，必须由真实执行环境和业务工具边界保证。
 
-## 设计讨论入口
+## 产品规格与开发基线文档
 
 - [需求基线与架构讨论树（第一、二轮定稿）](docs/discovery/0001-initial-scope-and-design-tree.md)
 - [第二、三轮定稿：分集、片段、镜头层级](docs/discovery/0002-episode-and-shot-hierarchy.md)
