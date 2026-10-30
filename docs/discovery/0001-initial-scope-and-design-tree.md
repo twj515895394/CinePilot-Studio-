@@ -1,7 +1,7 @@
 # CinePilot Studio — 需求基线与架构讨论树（第 1 轮）
 
 > 日期：2026-10-30
-> 状态：需求基线 + 前九轮决定已确认；其余架构提案仍待讨论（**提案未等同于决策**）
+> 状态：需求基线 + 前十轮决定已确认；其余架构提案仍待讨论（**提案未等同于决策**）
 > 工作方式：遵循 [grill-with-docs](../process/grill-with-docs/SKILL.md)，逐个问题讨论、验证、定稿；术语经确认后更新 CONTEXT.md，只有真正满足条件的架构决策才建立 ADR。
 > 来源：用户本轮需求及此前关于独立短视频、创意编剧与影视制作流水线的讨论。
 
@@ -97,7 +97,8 @@ CinePilot Studio（单一产品）
   - Comedy Skill：特定题材的可选插件，不应强制所有项目走喜剧模板。
   - Screenwriter：文学剧本。
   - Director / Storyboard / Prompt：下游导演、分镜与生成准备。
-- **阶段 handoff 包建议结构**：项目 ID、作品单元 ID、阶段 ID、任务目标、上游产物不可变版本 ID、角色/场景设定版本、风格及约束、历史决策摘要、允许修改边界、预期输出 Schema、验收规则。
+- **第十轮已确认**：采用精简、版本明确、可按需补充原文的正式 Handoff，避免默认传入全部聊天和大量文档；任务目标、上游已定稿版本、重要确认约束与产物要求必须可追溯，见 [ADR-0010](../adr/0010-compact-versioned-agent-handoff.md)。
+- **工程候选（未批准）**：将大内容保留于 MD/JSON/数据库，交接中只保留少量关键事实、版本锚点与查询依据；经受控接口按需取文档，可在 SQLite 上建立全文索引，但暂不要求部署知识库。参见 [第十一轮讨论](./0010-controlled-on-demand-retrieval.md)。
 - **反馈闭环**：Agent 草稿 → 系统校验与预览 → 人工批注/编辑 → Agent 定点改稿 → 用户定稿 → 固化版本与下游交接。
 - **记忆分层**：长期项目世界观/约束、单作品阶段事实、当前任务精简上下文、完整可追溯聊天记录。handoff 不应依赖聊天窗口无限延长。
 - **待验证**：首期 Agent 执行方式（Codex CLI / Claude CLI / SDK / API）、Skill 装载/隔离、权限与文件访问边界。
@@ -152,4 +153,4 @@ CinePilot Studio（单一产品）
 
 **已确认方案 A**：`项目 → 分集（独立作品）`，每集独立剧本，可选剧情连续性，不新增 `作品` 这一中间层级。正式领域词汇见 [CONTEXT.md](../../CONTEXT.md)，重要取舍见 [ADR-0002](../adr/0002-episode-is-independent-work.md)。
 
-**第三、四轮后续结论**：参见 [第三轮片段层级](./0002-episode-and-shot-hierarchy.md) 和 [第四轮剧本场次映射](./0003-screenplay-scene-to-segment-mapping.md)。[第五轮](./0004-idea-concept-episode-lifecycle.md) 已确认创意方向独立管理；[第六轮](./0005-idea-concept-library-scope.md) 已确认项目独立创意池；[第七轮](./0006-approved-artifact-revision-policy.md) 已确认不可覆盖旧定稿；[第八轮](./0007-upstream-change-impact-policy.md) 已确认下游待复核策略；[第九轮](./0008-stage-gate-and-handoff.md) 已确认正式阶段准入；当前 [第十轮](./0009-agent-handoff-payload.md) 讨论 Agent 正式交接资料来源。
+**第三、四轮后续结论**：参见 [第三轮片段层级](./0002-episode-and-shot-hierarchy.md) 和 [第四轮剧本场次映射](./0003-screenplay-scene-to-segment-mapping.md)。[第五轮](./0004-idea-concept-episode-lifecycle.md) 已确认创意方向独立管理；[第六轮](./0005-idea-concept-library-scope.md) 已确认项目独立创意池；[第七轮](./0006-approved-artifact-revision-policy.md) 已确认不可覆盖旧定稿；[第八轮](./0007-upstream-change-impact-policy.md) 已确认下游待复核策略；[第九轮](./0008-stage-gate-and-handoff.md) 已确认正式阶段准入；[第十轮](./0009-agent-handoff-payload.md) 已确认精简、版本锚定 Handoff；当前 [第十一轮](./0010-controlled-on-demand-retrieval.md) 讨论必要约束预取与详细内容按需检索的责任边界。
