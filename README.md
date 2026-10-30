@@ -44,6 +44,7 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [Agent / Skill 协作与运行架构（详细草案）](docs/spec/agent-skill-orchestration-and-runtime.md)
 - [Agent V1 运行路线：CLI 生态优先、官方 Agent SDK 可用时优先评估（已确认）](docs/discovery/0015-agent-runtime-priority.md)
 - [项目隔离 Agent 工作区与 Skill 只读投射（设计草案）](docs/spec/project-isolated-agent-workspaces-and-skills.md)
+- [项目工作区目录规范 v0.1（阶段产物及版本路径，待确认）](docs/spec/project-workspace-directory-layout.md)
 - [项目基础资产与分集变体确认记录](docs/discovery/0014-project-asset-episode-variants.md)
 - [B2 与横向资产管理的确认记录](docs/discovery/0013-production-breakdown-and-asset-lifecycle.md)
 - [领域词汇表：CONTEXT.md](CONTEXT.md)
