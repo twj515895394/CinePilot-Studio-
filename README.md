@@ -1,6 +1,6 @@
 # CinePilot Studio
 
-**Agent-first 的独立短视频创意、剧本与影视制作规划平台（设计讨论阶段）。**
+**Agent-first 的独立短视频创意、剧本与影视制作规划平台（V1 开发准备基线已建立）。**
 
 ## 当前范围
 
@@ -38,10 +38,14 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [第十一轮定稿：系统预备必需事实、Agent 受控按需检索](docs/discovery/0010-controlled-on-demand-retrieval.md)
 - [第十二轮定稿：SQLite + Markdown/JSON 的权威分工](docs/discovery/0011-storage-authority-and-admin-ui.md)
 - [第十三轮定稿：文件先行、SQLite 发布版本引用](docs/discovery/0012-cross-store-publish-consistency.md)
-- [整体产品流程与系统设计总览 v1.2（管理后台与 Agent 工作台双区域）](docs/spec/overall-product-workflow-and-system-map.md)
+- [整体产品流程与系统设计总览 v1.3（补齐 Agent/Model 与 Skill 阶段编排）](docs/spec/overall-product-workflow-and-system-map.md)
 - [八阶段输入输出、产物及正式交接设计（B2 已确认）](docs/spec/stage-contracts-and-artifact-map.md)
 - [创作资产体系：项目基础资产 + 分集变体（方案 B 已确认）](docs/spec/creative-asset-model-and-use.md)
-- [Agent / Skill 协作与运行架构（详细草案）](docs/spec/agent-skill-orchestration-and-runtime.md)
+- [Agent 接入与模型管理规格 v0.1](docs/spec/agent-integration-and-model-management.md)
+- [Skill Registry 与阶段 Skill 编排规格 v0.1（含八个外部候选来源）](docs/spec/stage-skill-orchestration-and-registry.md)
+- [Agent / Skill 协作与运行架构 v0.3](docs/spec/agent-skill-orchestration-and-runtime.md)
+- [Codex 开发启动与实施路线图 v0.1](docs/spec/development-kickoff-and-implementation-roadmap.md)
+- [Agent/Model 与阶段 Skill 编排确认记录](docs/discovery/0019-agent-model-and-stage-skill-orchestration.md)
 - [Agent V1 运行路线：CLI 生态优先、官方 Agent SDK 可用时优先评估（已确认）](docs/discovery/0015-agent-runtime-priority.md)
 - [项目隔离 Agent 工作区与 Skill 只读投射（设计草案）](docs/spec/project-isolated-agent-workspaces-and-skills.md)
 - [项目工作区目录规范 v0.3（阶段目录 + 系统单 SQLite 均已确认）](docs/spec/project-workspace-directory-layout.md)
@@ -49,6 +53,7 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [Python 业务接口与 Vue/Electron 创作工作台设计 v0.2](docs/spec/python-api-and-vue-electron-workbench.md)
 - [产品信息架构与页面功能规格 v0.1：项目管理后台 + Agent 创作工作台](docs/spec/product-information-architecture-and-page-functions.md)
 - [项目管理后台与 Agent 创作工作台页面设计记录](docs/discovery/0018-management-backend-and-agent-workbench-page-architecture.md)
+- [Agent/Model 与阶段 Skill 编排确认记录](docs/discovery/0019-agent-model-and-stage-skill-orchestration.md)
 - [核心模型与工作台主流程衔接确认记录](docs/discovery/0017-core-data-approval-and-ui-api-main-flow.md)
 - [SQLite 作用域：全系统共用一个数据库（已确认）](docs/discovery/0016-sqlite-scope-and-project-portability.md)
 - [项目基础资产与分集变体确认记录](docs/discovery/0014-project-asset-episode-variants.md)
