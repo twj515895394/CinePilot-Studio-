@@ -45,4 +45,4 @@
 
 **已确认的 B2 与资产管理边界**：B2 是正式且独立的「制作拆解」阶段，负责剧本场次→导演片段/可选子片段规划及本集资产需求核对；角色、场景、服装、道具等资产贯穿 A3–B4 管理，不能限定到 B2 才能创建。见 `docs/adr/0014-production-breakdown-with-cross-stage-assets.md`。
 
-**当前设计重点**：继续完成整体产品流程、阶段合同与核心产物、素材资产使用关系、Agent/Skill 协作、后台和 V1 范围。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同见 `docs/spec/stage-contracts-and-artifact-map.md`；资产模型草案见 `docs/spec/creative-asset-model-and-use.md`。**项目内多分集的资产复用与变体尚未定稿**；常规异常处理不单独 Grill。
+**当前设计重点**：继续完成整体产品流程、阶段合同与核心产物、素材资产使用关系、Agent/Skill 协作、后台和 V1 范围。总览草案见 `docs/spec/overall-product-workflow-and-system-map.md`；阶段合同见 `docs/spec/stage-contracts-and-artifact-map.md`；资产模型草案见 `docs/spec/creative-asset-model-and-use.md`。**项目内多分集资产复用已确认**：项目基础资产可被同项目多集引用，分集显式选择自己的外观/服装/状态变体，不直接改动项目基础定义，见 `docs/adr/0015-project-assets-with-episode-variants.md`。媒体文件路径/名称不应作为业务关联主键，推荐通过资产/版本/变体/媒体 ID 解析（具体 Schema 未定稿）。常规异常处理不单独 Grill。
