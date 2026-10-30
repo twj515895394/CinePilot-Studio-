@@ -997,8 +997,8 @@ V1 值得支持的批量能力：
 | 审查中心 | StageApproval、ArtifactRevision、ReviewFlag | SQLite + MD/JSON | 审查、定稿、待复核处理 |
 | Skills | SkillRegistry、ProjectSkillBinding | SQLite/系统注册元数据 | 启用、禁用、查看版本 |
 | 活动记录 | Domain Events / Activity | SQLite | 回溯 |
-| 系统设置 | RuntimeConfig、StorageConfig、SkillRegistry | 系统配置服务 | 配置、检测、备份 |
-| 项目设置 | Project、ProjectSkillBinding、Workspace | SQLite + 项目目录 | 项目资料、技能、导出 |
+| 系统设置 | AgentRuntimeRegistry、ConnectionProfile、ModelProfile、SkillRegistry、StorageConfig | 系统配置服务 | Agent 检测、模型发现、Skill 来源审核、备份 |
+| 项目设置 | Project、ProjectAgentPolicy、ProjectStageAgentRoute、ProjectStageSkillProfile、Workspace | SQLite + 项目目录 | 项目资料、阶段 Agent/Model/Skill 配置、导出 |
 
 ---
 
@@ -1015,7 +1015,8 @@ V1 值得支持的批量能力：
 5. Artifact Draft 保存、版本历史、阶段整体审查/定稿；
 6. Agent Run 状态、任务记录和已保存产物回链；
 7. 项目基础资产/图片上传、预览和分集变体的最低可用能力；
-8. 系统 Runtime 配置和项目 Skill 启用。
+8. 系统 Agent 接入/模型配置、项目默认 Agent Profile 和 A1–B4 阶段 Agent 路由。
+9. 系统 Skill Registry、项目八阶段 Stage Skill Profile、分集/任务覆盖和 Skill Plan 预览。
 
 ### P1：增强后台管理和专业编辑体验
 
