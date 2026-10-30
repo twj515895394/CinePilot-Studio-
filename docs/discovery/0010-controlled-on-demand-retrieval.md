@@ -1,7 +1,7 @@
 # 第十一轮 Grill：Handoff 最小必传信息与 Agent 按需检索的责任边界
 
 > 日期：2026-10-30  
-> 状态：第十轮 B 已确认；本轮候选设计，尚未批准  
+> 状态：第十一轮方案 B 已确认；存储层的具体权威模型仍待讨论  
 > 工作方式：[grill-with-docs](../process/grill-with-docs/SKILL.md)  
 > 依据：[第十轮记录](./0009-agent-handoff-payload.md)、[ADR-0009](../adr/0009-approved-upstream-stage-gates.md)、[ADR-0010](../adr/0010-compact-versioned-agent-handoff.md)
 
@@ -99,4 +99,13 @@ lookup_policy:
 - B. 系统预取必要事实 + Agent 按需检索细节（推荐）。
 - C. 由系统预先装载大量关联文档，尽量不查询。
 
-本轮只确认预取与检索的责任边界。FTS5/向量库/外部知识库选择、实际工具调用 API、Schema、Token 预算与存储权威定义留待后续。
+## 第十一轮正式结论（2026-10-30）
+
+**用户选择方案 B（已确认）**：系统在启动阶段任务前准备必须提供的目标、强制约束与上游定稿版本依据；Agent 通过受控的查询接口按需获取详细创作内容，不默认整包加载所有文档和聊天历史。该选择兼顾必需信息不可漏读、上下文控制与较少无意义工具调用。已更新 [CONTEXT.md](../../CONTEXT.md)、[ADR-0011](../adr/0011-mandatory-handoff-context-controlled-retrieval.md)。
+
+**用户新增的关键产品要求**：确认使用 SQLite + Markdown/JSON 作为候选持久化组合时，管理后台仍必须能分别查看已定稿创意、故事/剧本、导演、分镜和提示词等完整阶段内容，能根据具体分集与版本读取、浏览与管理；数据库/文件分工不得损害 Web UI 使用体验。
+
+**工程建议（待讨论）**：通过统一业务服务层将 SQLite 的项目/分集/产物/版本/状态索引与 Markdown 或 JSON 的具体内容关联。列表查询可先从索引返回，详情在打开时按稳定 ID、版本与文件定位读取。UI 编辑与 Agent 提交都走同一写入服务，不允许直接绕过版本与校验；定稿不可覆盖，修改另建草稿。创意方向存在于分集创建前，应该能独立从项目级创意池打开。
+
+**仍未决定**：数据权威分工、文件和 SQLite 的一致性与故障恢复、具体 API/Schema、页面/编辑器形态、检索限额、是否需要 FTS5/向量库。下一轮见 [SQLite + Markdown/JSON 与 Web 管理后台的事实来源](./0011-storage-authority-and-admin-ui.md)。
+
