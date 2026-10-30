@@ -21,6 +21,8 @@
 - Vue + Python + Electron；Web 与 Electron 复用同一套核心工作台。
 - 所有项目共用一个系统级 SQLite；项目创作正文、结构化文件和媒体仍保存在各自项目目录。
 - 新建项目即创建项目目录与项目隔离 Agent 工作区；Agent 不可访问其他项目目录、全局 SQLite 和系统凭据。
+- 系统需要 Agent 接入与模型配置；模型目录和参数由对应 Agent Adapter 动态发现，不支持时明确使用 Runtime 默认模型，不硬编码跨 Agent 统一清单。
+- A1–B4 每个阶段均有独立 Stage Skill Profile，可组合主 Skill、辅助 Skill、条件/题材 Skill 和 Review Skill；一个 Skill 可跨阶段复用。外部候选需经过 License、安全、兼容和质量评估后才能启用。
 - A1 点子发现、A2 创意发散属于项目级创意池；用户选中 Concept 并决定开发时才创建 Episode。
 - 一个 Episode 对应一条独立短视频，并且有且只有一个主创意来源。
 - 分集正式阶段为 A3 故事、A4 剧本、B1 导演、B2 制作拆解、B3 分镜、B4 提示词。
