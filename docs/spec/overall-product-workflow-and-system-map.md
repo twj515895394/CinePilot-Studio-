@@ -1,6 +1,6 @@
 # CinePilot Studio 整体产品流程与系统设计总览
 
-> 版本：0.4（整体方案草案，项目资产 + 分集变体已确认）
+> 版本：0.5（增加 Agent/Skill 协作架构草案）
 > 日期：2026-10-30
 > 状态：用于统一产品全貌与后续设计顺序；标注「已确认」的内容来自用户决策，其余为推荐草案，不自动视为定稿。
 > 依据：[需求基线](../discovery/0001-initial-scope-and-design-tree.md)、[领域词汇表](../../CONTEXT.md)、[ADR-0001 至 ADR-0013](../adr/)
@@ -189,6 +189,8 @@ EP-001
 ---
 
 ## 5. Agent、Skill 与系统编排
+
+**Agent/Skill 详细协作设计（推荐草案）：** [Agent / Skill 协作与运行架构](./agent-skill-orchestration-and-runtime.md)。涵盖 Router、专业 Skill、任务与会话、精简 Handoff、受控读取角色图片、Agent Runtime Adapter、草稿写回及 Vue/Electron 任务进度。具体 Agent 运行方式与能力桥接尚未定稿。
 
 ### 5.1 责任分工
 
