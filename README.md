@@ -39,6 +39,7 @@ Vue 的配套组件库、Python Web 框架、Electron 与 Python 服务的运行
 - [整体产品流程与系统设计总览（0.2 草案，已纳入 Vue/Python/Electron）](docs/spec/overall-product-workflow-and-system-map.md)
 - [八阶段输入输出、产物及正式交接设计（B2 已确认）](docs/spec/stage-contracts-and-artifact-map.md)
 - [创作资产体系：项目基础资产 + 分集变体（方案 B 已确认）](docs/spec/creative-asset-model-and-use.md)
+- [Agent / Skill 协作与运行架构（详细草案）](docs/spec/agent-skill-orchestration-and-runtime.md)
 - [项目基础资产与分集变体确认记录](docs/discovery/0014-project-asset-episode-variants.md)
 - [B2 与横向资产管理的确认记录](docs/discovery/0013-production-breakdown-and-asset-lifecycle.md)
 - [领域词汇表：CONTEXT.md](CONTEXT.md)
