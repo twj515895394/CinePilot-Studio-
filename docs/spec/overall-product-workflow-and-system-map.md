@@ -1,6 +1,6 @@
 # CinePilot Studio 整体产品流程与系统设计总览
 
-> 版本：0.8（项目目录分层已确认，SQLite 作用域待定）
+> 版本：0.9（目录分层与系统单 SQLite 均已确认）
 > 日期：2026-10-30
 > 状态：用于统一产品全貌与后续设计顺序；标注「已确认」的内容来自用户决策，其余为推荐草案，不自动视为定稿。
 > 依据：[需求基线](../discovery/0001-initial-scope-and-design-tree.md)、[领域词汇表](../../CONTEXT.md)、[ADR-0001 至 ADR-0013](../adr/)
@@ -278,7 +278,7 @@ SQLite 记录定稿状态与上游版本依赖，开放下一阶段
 
 ### 6.2 统一项目目录规范（待确认）
 
-**项目目录分层已确认**：参见 [项目工作区目录规范 v0.2](./project-workspace-directory-layout.md) 和 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)。项目级 `creative-pool/`、`assets/`、`media/`；分集级 `episodes/{episode_id}/stages/` 六个阶段；每个产物区分 `drafts/` 与 `revisions/`。下方是早期示意，**具体文件名和 SQLite 物理作用域仍未确认**，以 v0.2 为准。
+**目录与 SQLite 作用域均已确认**：参见 [项目目录规范 v0.3](./project-workspace-directory-layout.md)、[ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md) 及 [ADR-0019](../adr/0019-single-system-sqlite-with-project-content-files.md)。所有项目共用系统级单 SQLite，项目创意池/资产/媒体及分集阶段创作文件独立存储。下方为旧版示意；最终具体文件名/Schema 仍待实施设计。
 
 #### 原始概念目录示例（供对照，非执行规范）
 
@@ -316,7 +316,7 @@ workspace/
                     └── {artifact-id}/{revision-id}/
 ~~~
 
-**目录分层已经用户确认**，参见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)。SQLite 是业务状态和关系的权威，不通过文件名或扫描目录推断定稿状态；**系统一库还是项目一库**仍需明确，参见 [SQLite 作用域候选](../discovery/0016-sqlite-scope-and-project-portability.md)。
+**目录分层和全系统单 SQLite 已确认**，参见 [ADR-0018](../adr/0018-project-stage-artifacts-and-revisions-layout.md)、[ADR-0019](../adr/0019-single-system-sqlite-with-project-content-files.md)。SQLite 是业务关系、版本与审批权威；Python 按索引读取各项目的 MD/JSON/媒体正文。文档搜索可按需求补充可重建的全文索引，不能另设一份可独立修改的正文权威。
 
 ### 6.3 按需读取，不先建独立知识库
 
