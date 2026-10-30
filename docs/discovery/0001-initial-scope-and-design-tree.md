@@ -111,6 +111,7 @@ CinePilot Studio（单一产品）
 - **反馈闭环**：Agent 草稿 → 系统校验与预览 → 人工批注/编辑 → Agent 定点改稿 → 用户定稿 → 固化版本与下游交接。
 - **记忆分层**：长期项目世界观/约束、单作品阶段事实、当前任务精简上下文、完整可追溯聊天记录。handoff 不应依赖聊天窗口无限延长。
 - **已确认技术栈**：Vue + Python + Electron；此选择不自动确定 Python Web 框架、Electron 与 Python 进程绑定方式或部署形态。
+- **Agent/Skill 完整方案（待确认实现细节）**：[Agent/Skill 协作与运行架构草案](../spec/agent-skill-orchestration-and-runtime.md) 已提出代码阶段编排、Skill 路由、受控资料与图片读取、草稿提交/实时 UI 和可替换运行时适配层。
 - **待验证**：首期 Agent 执行方式（Codex CLI / Claude CLI / SDK / API）、Skill 装载/隔离、权限与文件访问边界。
 
 ## 6. 前端建议的核心工作台（待决）
